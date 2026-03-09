@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Müraciətləri İdarə Et | MassSolve{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0 text-dark">
+                    <i class="fa-solid fa-clipboard-list text-primary me-2"></i>Gələn Müraciətlər
+                </h2>
+                <span class="badge bg-primary rounded-pill px-3">{{ requests.count }} Yeni</span>
+            </div>
+            
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4 py-3">İstifadəçi</th>
+                                <th class="py-3">Komanda</th>
+                                <th class="py-3" style="width: 35%;">Mesaj</th>
+                                <th class="py-3">Tarix</th>
+                                <th class="py-3 text-end pe-4">Əməliyyat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold small" style="width: 35px; height: 35px;">
+                                            {{ req.user.username|first|upper }}
+                                        </div>
+                                        <a href="{% url 'profile' req.user.username %}" class="text-dark fw-bold text-decoration-none small">@{{ req.user.username }}</a>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-light text-dark border">{{ req.team.name }}</span></td>
+                                <td>
+                                    <div class="request-message-wrapper" style="cursor: pointer;">
+                                        <p class="mb-0 small text-muted text-truncate-custom" id="msg-{{ req.id }}">
+                                            {{ req.message }}
+                                        </p>
+                                        <small class="text-primary fw-bold read-more-btn" style="font-size: 0.7rem;" data-id="{{ req.id }}">Tam oxu...</small>
+                                    </div>
+                                </td>
+                                <td class="small text-muted">{{ req.created_at|date:"d M Y" }}</td>
+                                <td class="text-end pe-4">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{% url 'approve_request' req.id %}" class="btn btn-sm btn-success rounded-pill px-3 fw-bold shadow-sm">
+                                            <i class="fa-solid fa-check me-1"></i> Qəbul
+                                        </a>
+                                        <a href="{% url 'reject_request' req.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold">
+                                            <i class="fa-solid fa-xmark me-1"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="opacity-50">
+                                        <i class="fa-solid fa-envelope-open fa-3x mb-3 text-muted"></i>
+                                        <p class="mb-0">Hələ ki, heç bir yeni müraciət yoxdur.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{% url 'team_list' %}" class="btn btn-link text-muted text-decoration-none">← Komandalara qayıt</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .request-message-wrapper {
+        position: relative;
+    }
+
+    .text-truncate-custom {
+        max-height: 1.5em; /* Yalnız bir sətir hündürlüyü */
+        overflow: hidden;
+        line-height: 1.5em;
+        word-break: break-word;
+        transition: max-height 0.4s ease-in-out;
+        color: #6c757d;
+        display: block; /* webkit-box yerinə standart block */
+    }
+
+    /* Klikləyəndə hündürlüyü açırıq */
+    .text-truncate-custom.expanded {
+        max-height: 1000px; /* Mesajın tam açılması üçün kifayət qədər böyük rəqəm */
+        color: #212529;
+    }
+
+    .read-more-btn {
+        display: inline-block;
+        margin-top: 2px;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .read-more-btn:hover {
+        color: #0d6efd !important;
+        text-decoration: underline;
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.request-message-wrapper').forEach(wrapper => {
+        wrapper.addEventListener('click', function() {
+            const p = this.querySelector('.text-truncate-custom');
+            const btn = this.querySelector('.read-more-btn');
+            
+            p.classList.toggle('expanded');
+            
+            if (p.classList.contains('expanded')) {
+                btn.innerText = 'Gizlə';
+            } else {
+                btn.innerText = 'Tam oxu...';
+            }
+        });
+    });
+</script>
+{% endblock %}

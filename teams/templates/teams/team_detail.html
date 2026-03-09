@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ team.name }} | Detallar{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'team_list' %}" class="text-decoration-none">Komandalar</a></li>
+            <li class="breadcrumb-item active">{{ team.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="d-flex align-items-center gap-4 mb-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 80px; height: 80px; font-size: 2rem;">
+                        {{ team.name|first|upper }}
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1">{{ team.name }}</h1>
+                        <p class="text-muted mb-0">Lider: <a href="{% url 'profile' team.leader.username %}" class="text-decoration-none fw-bold">@{{ team.leader.username }}</a></p>
+                    </div>
+                </div>
+
+                <hr class="my-4 opacity-25">
+
+                <h4 class="fw-bold mb-3">Layihə Haqqında</h4>
+                <p class="text-secondary leading-relaxed fs-5" style="white-space: pre-line;">
+                    {{ team.description }}
+                </p>
+
+                {% if team.looking_for %}
+                <div class="mt-5">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-magnifying-glass-plus me-2 text-primary"></i>Axtarılan Rollar</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="p-3 bg-light rounded-4 border-start border-primary border-4 w-100">
+                            <span class="text-dark">{{ team.looking_for }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <h5 class="fw-bold mb-3">Komanda Heyəti</h5>
+                <div class="d-flex flex-column gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{{ team.leader.profile.avatar.url|default:'/static/img/default.png' }}" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
+                        <div>
+                            <p class="mb-0 fw-bold small">@{{ team.leader.username }}</p>
+                            <small class="text-warning">Lider</small>
+                        </div>
+                    </div>
+                    {% for member in team.members.all %}
+                        {% if member != team.leader %}
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="{{ member.profile.avatar.url|default:'/static/img/default.png' }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                            <p class="mb-0 small">@{{ member.username }}</p>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4 pt-4 border-top">
+                    {% if user.is_authenticated %}
+                        {% if user == team.leader or user in team.members.all %}
+                            <a href="{% url 'team_workspace' team.id %}" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">
+                                <i class="fa-solid fa-laptop-code me-2"></i>İş Sahəsinə Gir
+                            </a>
+                        {% else %}
+                            <button class="btn btn-outline-primary w-100 rounded-pill py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#joinModal{{ team.id }}">
+                                <i class="fa-solid fa-paper-plane me-2"></i>Müraciət Et
+                            </button>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-secondary w-100 rounded-pill py-2 fw-bold">Daxil Ol və Qoşul</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

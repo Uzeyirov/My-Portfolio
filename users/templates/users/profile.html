@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Profil Məlumatların</h2>
+    <p>İstifadəçi adı: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Status: 
+        {% if user.is_manufacturer %}
+            <b>İstehsalçı Səlahiyyəti</b>
+        {% elif user.is_student %}
+            <b>Tələbə Səlahiyyəti</b>
+        {% else %}
+            <b>Fərdi İstifadəçi</b>
+        {% endif %}
+    </p>
+{% endblock %}

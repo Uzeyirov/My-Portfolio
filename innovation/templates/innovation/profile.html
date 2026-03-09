@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile_user.username }} Profili | MassSolve{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4 text-center" style="border-radius: 25px;">
+                <div class="position-relative d-inline-block mx-auto mb-3">
+                    {% if profile_user.profile.avatar %}
+                        <img src="{{ profile_user.profile.avatar.url }}" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;">
+                    {% else %}
+                        <div class="mx-auto bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow" style="width: 120px; height: 120px; font-size: 3rem; font-weight: bold;">
+                            {{ profile_user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <h3 class="fw-bold mb-1 text-dark">{{ profile_user.username }}</h3>
+                <p class="text-muted small mb-3"><i class="fa-solid fa-envelope me-1"></i> {{ profile_user.email }}</p>
+                
+                <div class="d-flex justify-content-around bg-light rounded-4 py-3 mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-0 text-primary">{{ my_ideas.count }}</h5>
+                        <small class="text-muted small">İdeya</small>
+                    </div>
+                    <div class="border-start border-end px-3">
+                        <h5 class="fw-bold mb-0 text-primary">{{ total_votes_received }}</h5>
+                        <small class="text-muted small">Cəmi Səs</small>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0 text-primary">{{ voted_ideas.count }}</h5>
+                        <small class="text-muted small">Dəstək</small>
+                    </div>
+                </div>
+
+                <div class="text-start mb-4">
+                    <h6 class="fw-bold mb-2 small text-uppercase text-primary">Haqqında</h6>
+                    <p class="text-secondary small">{{ profile_user.profile.bio|default:"Bioqrafiya əlavə edilməyib." }}</p>
+                    <h6 class="fw-bold mb-2 small text-uppercase text-primary">Məkan</h6>
+                    <p class="text-secondary small"><i class="fa-solid fa-location-dot me-1"></i> {{ profile_user.profile.location|default:"Qeyd edilməyib" }}</p>
+                </div>
+
+                {% if user == profile_user %}    
+                    <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fa-solid fa-pen-to-square me-2"></i>Profili Redaktə Et
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4" style="border-radius: 25px;">
+                <ul class="nav nav-pills mb-4 gap-2" id="profileTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active rounded-pill px-4 fw-bold shadow-sm" id="my-ideas-tab" data-bs-toggle="pill" data-bs-target="#my-ideas" type="button">İdeyalar</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link rounded-pill px-4 fw-bold shadow-sm" id="voted-tab" data-bs-toggle="pill" data-bs-target="#voted" type="button">Dəstəklədiklərim</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="profileTabsContent">
+                    <div class="tab-pane fade show active" id="my-ideas" role="tabpanel">
+                        {% for idea in my_ideas %}
+                            <div class="d-flex align-items-center p-3 mb-3 border rounded-4 hover-bg-light transition-all shadow-sm bg-white">
+                                <div class="flex-grow-1">
+                                    <h6 class="fw-bold mb-1">{{ idea.title }}</h6>
+                                    <small class="text-muted">{{ idea.created_at|date:"d M Y" }}</small>
+                                </div>
+                                <div class="text-end d-flex align-items-center gap-2">
+                                    <span class="badge bg-primary rounded-pill px-3">{{ idea.total_votes }} Səs</span>
+                                    
+                                    {% if user == profile_user %}
+                                        <a href="{% url 'edit_idea' idea.pk %}" class="btn btn-sm btn-outline-warning rounded-circle shadow-sm" title="Redaktə et">
+                                            <i class="fa-solid fa-pen" style="font-size: 0.75rem;"></i>
+                                        </a>
+                                        <a href="{% url 'delete_idea' idea.pk %}" class="btn btn-sm btn-outline-danger rounded-circle shadow-sm" title="Sil">
+                                            <i class="fa-solid fa-trash" style="font-size: 0.75rem;"></i>
+                                        </a>
+                                    {% endif %}
+                                    
+                                    <a href="{% url 'idea_detail' idea.pk %}" class="btn btn-sm btn-light rounded-circle ms-1"><i class="fa-solid fa-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-center py-5 text-muted">Hələ heç bir ideya paylaşılmayıb.</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="tab-pane fade" id="voted" role="tabpanel">
+                        {% for idea in voted_ideas %}
+                            <div class="d-flex align-items-center p-3 mb-3 border rounded-4 bg-white shadow-sm">
+                                <div class="flex-grow-1">
+                                    <h6 class="fw-bold mb-1">{{ idea.title }}</h6>
+                                    <small class="text-muted">Müəllif: {{ idea.author.username }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <a href="{% url 'idea_detail' idea.pk %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Bax</a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-center py-5 text-muted">Hələ heç bir ideyaya səs verilməyib.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if user == profile_user %}
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 25px;">
+            <div class="modal-header border-0 px-4 pt-4">
+                <h5 class="modal-title fw-bold" id="editProfileModalLabel">Profilini Yenilə</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="modal-body px-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Profil Şəkli</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-image"></i></span>
+                            {{ p_form.avatar }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">İstifadəçi Adı</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-user"></i></span>
+                            {{ u_form.username }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Məkan</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-location-dot"></i></span>
+                            {{ p_form.location }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Haqqında (Bio)</label>
+                        {{ p_form.bio }}
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Ləğv et</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Yadda Saxla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .hover-bg-light:hover { background-color: #f8f9fa; transform: translateX(5px); }
+    .transition-all { transition: all 0.3s ease; }
+    .nav-pills .nav-link.active { background-color: #0d6efd; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3); }
+    .form-control { border-radius: 10px; border: 1px solid #dee2e6; padding: 10px 15px; }
+    .form-control:focus { box-shadow: none; border-color: #0d6efd; }
+    .btn-outline-warning:hover { color: #fff; }
+</style>
+{% endblock %}

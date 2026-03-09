@@ -1,0 +1,65 @@
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0" style="border-radius: 20px;">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold text-primary">Xoş Gəldiniz</h2>
+                        <p class="text-muted">Hesabınıza giriş edin</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-secondary">İstifadəçi Adı</label>
+                            <input type="text" name="username" class="form-control form-control-lg bg-light border-0" 
+                                   placeholder="İstifadəçi adınızı yazın" style="font-size: 0.9rem;" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-secondary">Şifrə</label>
+                            <input type="password" name="password" class="form-control form-control-lg bg-light border-0" 
+                                   placeholder="••••••••" style="font-size: 0.9rem;" required>
+                        </div>
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger p-2 small text-center" role="alert">
+                                İstifadəçi adı və ya şifrə yanlışdır!
+                            </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm" style="border-radius: 12px; font-size: 1rem;">
+                                Daxil Ol
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0 small text-muted">Hesabınız yoxdur? 
+                            <a href="{% url 'register' %}" class="text-primary fw-bold text-decoration-none">Qeydiyyatdan keçin</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Fokuslananda göy haşiyə çıxsın */
+    .form-control:focus {
+        background-color: #fff !important;
+        border: 1px solid #0d6efd !important;
+        box-shadow: none;
+    }
+    body {
+        background-color: #f4f7f6;
+    }
+</style>
+{% endblock %}
