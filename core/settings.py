@@ -139,3 +139,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'users.User'
+
+
+# settings.py
+ALLOWED_HOSTS = ['my-portfolio-64bs.onrender.com', 'localhost', '127.0.0.1']
