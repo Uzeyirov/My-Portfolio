@@ -79,17 +79,20 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'masssolve_db',      # pgAdmin-də yaratdığın bazanın adı
-        'USER': 'postgres',          # PostgreSQL quraşdıranda gələn standart istifadəçi adı
-        'PASSWORD': '1234',   # PostgreSQL yükləyəndə təyin etdiyin şifrə (məsələn 1234)
-        'HOST': '127.0.0.1',         # Bazanın sənin kompüterində olduğunu bildirir
-        'PORT': '5432',              # Standart port, dəyişməmisənsə belə qalır
-    }
-}
+import os
+import dj_database_url
 
+# ... digər kodlar ...
+
+DATABASES = {
+    'default': dj_database_url.config(
+        # Əgər Render-də DATABASE_URL varsa onu götürür, 
+        # yoxdursa aşağıdakı lokal PostgreSQL linkini işlədir.
+        default=os.environ.get('DATABASE_URL', 'postgresql://postgres:1234@127.0.0.1:5432/masssolve_db'),
+        conn_max_age=600,
+        ssl_require=True if os.environ.get('DATABASE_URL') else False
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
