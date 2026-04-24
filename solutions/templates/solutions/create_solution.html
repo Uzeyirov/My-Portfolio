@@ -1,35 +1,78 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Yeni Həll Yarat | MassSolve{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'solutions/css/create_solution.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center py-5">
-    <div class="col-lg-7">
-        <div class="card border-0 shadow-lg rounded-4 p-5 bg-white">
-            <h2 class="fw-bold mb-4 text-center">Yeni Texniki Həll</h2>
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Həllin Başlığı</label>
-                    <input type="text" name="title" class="form-control py-2" placeholder="Məs: Metro Ventilyasiya Sistemi" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Hədəf Sahə</label>
-                    <input type="text" name="target_area" class="form-control py-2" placeholder="Məs: Nəqliyyat" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Geniş Texniki İzah</label>
-                    <textarea name="description" class="form-control" rows="5" required></textarea>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Əsas Şəkil (Render)</label>
-                        <input type="file" name="image" class="form-control" accept="image/*" required>
+<div class="ms-create-wrapper">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="ms-card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="ms-card-header p-4 text-center">
+                        <h2 class="fw-bold mb-0 text-white">
+                            <i class="fa-solid fa-lightbulb ms-text-cyan me-2"></i>Yeni Texniki Həll
+                        </h2>
+                        <p class="ms-text-muted mt-2">İdeyanı dünyaya tanıt və cəmiyyəti dəyiş.</p>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Texniki Fayl (PDF)</label>
-                        <input type="file" name="technical_file" class="form-control">
+
+                    <div class="card-body p-4 p-md-5">
+                        <form method="POST" enctype="multipart/form-data" class="ms-form">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-white">Həllin Başlığı</label>
+                                <input type="text" name="title" class="ms-form-control form-control py-3" 
+                                       placeholder="Məs: Metro Ventilyasiya Sistemi" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-white">Hədəf Sahə</label>
+                                <input type="text" name="target_area" class="ms-form-control form-control py-3" 
+                                       placeholder="Məs: Nəqliyyat, Enerji, Ekologiya" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-white">Geniş Texniki İzah</label>
+                                <textarea name="description" class="ms-form-control form-control" 
+                                          rows="6" placeholder="Həllin necə işlədiyini və hansı problemi aradan qaldırdığını ətraflı yazın..." required></textarea>
+                            </div>
+
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-white">
+                                        <i class="fa-solid fa-image me-1 ms-text-cyan"></i> Əsas Şəkil (Render)
+                                    </label>
+                                    <div class="ms-file-input-wrapper">
+                                        <input type="file" name="image" class="ms-form-control form-control" accept="image/*" required>
+                                        <small class="ms-text-muted mt-1 d-block">JPG və ya PNG formatında.</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-white">
+                                        <i class="fa-solid fa-file-pdf me-1 ms-text-cyan"></i> Texniki Fayl (PDF)
+                                    </label>
+                                    <div class="ms-file-input-wrapper">
+                                        <input type="file" name="technical_file" class="ms-form-control form-control" accept=".pdf">
+                                        <small class="ms-text-muted mt-1 d-block">Çertyojlar və ətraflı sənədlər üçün.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-3">
+                                <button type="submit" class="btn ms-btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3">
+                                    <i class="fa-solid fa-paper-plane me-2"></i>Həlli Yayımla
+                                </button>
+                                <a href="{% url 'solutions_home' %}" class="btn btn-link ms-text-muted text-decoration-none text-center">Ləğv et və qayıt</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill shadow-sm">Yayımla</button>
-            </form>
+            </div>
         </div>
     </div>
 </div>

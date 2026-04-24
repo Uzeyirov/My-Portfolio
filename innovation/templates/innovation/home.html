@@ -1,174 +1,169 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Ana Səhifə | MassSolve{% endblock %}
 
-
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'innovation/css/home.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-5 bg-primary text-white text-center mb-5" style="border-radius: 0 0 50px 50px; margin-top: -24px; box-shadow: 0 10px 30px rgba(13, 110, 253, 0.2);">
-    <div class="container py-4">
-        <h1 class="display-4 fw-bold mb-3">Gələcəyi Birlikdə Qururuq</h1>
-        <p class="lead mb-4 opacity-75">Sənin yaradıcı ideyan, mühəndislərin biliyi və istehsalçıların gücü burada birləşir.</p>
-        <div class="d-flex justify-content-center gap-3">
-            <a href="{% url 'create_idea' %}" class="btn btn-light btn-lg px-4 fw-bold text-primary shadow">
-                <i class="fa-solid fa-plus me-2"></i>İdeya Paylaş
-            </a>
-            <a href="#explore" class="btn btn-outline-light btn-lg px-4 fw-bold">
-                Kəşf Et
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="container mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form action="{% url 'home' %}" method="GET" class="position-relative">
-                <input type="text" name="q" class="form-control form-control-lg rounded-pill px-4 shadow-sm border-0" 
-                       placeholder="Axtarış et" 
-                       value="{{ search_query|default:'' }}" style="padding-right: 120px;">
-                <button type="submit" class="btn btn-primary rounded-pill position-absolute end-0 top-0 h-100 px-4 fw-bold" style="margin: 2px; border-top-left-radius: 0; border-bottom-left-radius: 0;">
-                    <i class="fa-solid fa-magnifying-glass me-2"></i>Axtar
-                </button>
-            </form>
-            {% if search_query %}
-                <div class="mt-3 d-flex justify-content-between align-items-center px-3">
-                    <p class="text-muted small mb-0">
-                        <strong>"{{ search_query }}"</strong> üçün {{ ideas.count }} nəticə tapıldı.
-                    </p>
-                    <a href="{% url 'home' %}" class="btn btn-sm btn-link text-decoration-none text-danger fw-bold">
-                        <i class="fa-solid fa-xmark me-1"></i>Təmizlə
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-<div class="container" id="explore">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {% for idea in ideas %}
-        <div class="col" id="idea-{{ idea.id }}">
-            <div class="card h-100 shadow-sm border-0 transition-hover" style="border-radius: 20px; overflow: hidden; background: #fff;">
-                <div class="position-relative">
-                    {% if idea.image %}
-                        <img src="{{ idea.image.url }}" class="card-img-top" alt="{{ idea.title }}" style="height: 240px; object-fit: cover;">
-                    {% else %}
-                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 240px;">
-                            <i class="fa-solid fa-camera-retro fa-3x text-secondary opacity-25"></i>
-                        </div>
-                    {% endif %}
-                    
-                    {% if idea.category %}
-                    <span class="position-absolute bottom-0 start-0 m-3 badge bg-primary shadow-sm py-2 px-3" style="border-radius: 10px;">
-                        {{ idea.category.name }}
-                    </span>
-                    {% endif %}
-
-                    {% if idea.is_official_product %}
-                        <span class="position-absolute top-0 end-0 m-3 badge bg-warning text-dark shadow-sm py-2 px-3" style="border-radius: 10px;">
-                            <i class="fa-solid fa-certificate me-1"></i> Rəsmi
-                        </span>
-                    {% endif %}
-                </div>
-
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-center mb-3 text-muted small">
-                        <a href="{% url 'profile' idea.author.username %}" class="text-decoration-none d-flex align-items-center text-muted hover-link-profile">
-                            {% if idea.author.profile.avatar %}
-                                <img src="{{ idea.author.profile.avatar.url }}" class="rounded-circle me-2 shadow-sm" style="width: 25px; height: 25px; object-fit: cover; border: 1px solid #dee2e6;">
-                            {% else %}
-                                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2 shadow-sm" style="width: 25px; height: 25px; font-size: 0.7rem; font-weight: bold;">
-                                    {{ idea.author.username|first|upper }}
-                                </div>
-                            {% endif %}
-                            <span class="fw-bold text-dark">{{ idea.author.username }}</span>
-                        </a>
-                        
-                        <span class="mx-2 opacity-50">|</span>
-                        <span>{{ idea.created_at|date:"d M Y" }}</span>
-                    </div>
-                    <h5 class="card-title fw-bold text-dark mb-3">{{ idea.title }}</h5>
-                    <p class="card-text text-secondary mb-4" style="font-size: 0.95rem; line-height: 1.6;">
-                        {{ idea.description|truncatewords:20 }}
-                    </p>
-                </div>
-
-                <div class="card-footer bg-white border-0 p-4 pt-0 d-flex justify-content-between align-items-center">
-                    {% if user.is_authenticated %}
-                        <form action="{% url 'vote_idea' idea.pk %}" method="POST" class="m-0">
-                            {% csrf_token %}
-                            <button type="submit" class="btn {% if user in idea.votes.all %}btn-primary shadow{% else %}btn-outline-primary{% endif %} rounded-pill px-4 py-2 fw-bold transition-all d-flex align-items-center">
-                                <i class="fa-solid fa-circle-chevron-up fs-5 me-2 {% if user in idea.votes.all %}animate-jump{% endif %}"></i>
-                                <span>{{ idea.total_votes }} Səs</span>
-                            </button>
-                        </form>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-bold small d-flex align-items-center">
-                            <i class="fa-regular fa-circle-chevron-up fs-5 me-2"></i>
-                            <span>{{ idea.total_votes }} Səs</span>
-                        </a>
-                    {% endif %}
-                    
-                    <a href="{% url 'idea_detail' idea.pk %}" class="text-decoration-none fw-bold text-primary hover-link">
-                        Detallar <i class="fa-solid fa-chevron-right small ms-1"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <div class="mb-4">
-                <i class="fa-solid fa-magnifying-glass fa-5x text-light"></i>
-            </div>
-            <h3 class="fw-bold">Nəticə tapılmadı.</h3>
-            <p class="text-muted">Axtarış sözünü dəyişməyə və ya bütün ideyalara baxmağa nə dərsiniz?</p>
-            <a href="{% url 'home' %}" class="btn btn-primary rounded-pill px-5 py-3 mt-3 shadow">
-                Bütün İdeyalara Qayıt
-            </a>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-<style>
-    .transition-hover {
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-    .transition-hover:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
-    }
-    .hover-link:hover {
-        text-decoration: underline !important;
-    }
-    .hover-link-profile:hover span {
-        color: #0d6efd !important;
-        text-decoration: underline;
-    }
+<div class="hero-full-wrapper">
+    <div class="hero-grid-pattern"></div>
     
-    .animate-jump {
-        animation: upJump 0.6s ease;
-    }
-    @keyframes upJump {
-        0% { transform: translateY(0); }
-        50% { transform: translateY(-6px); }
-        100% { transform: translateY(0); }
-    }
+    <div class="custom-container text-center">
+        <div class="hero-main-content">
+            <h1 class="hero-title-large">Böyük Problemləri</h1>
+            <h1 class="hero-title-blue">Birlikdə Həll Edək.</h1>
+            
+            <p class="hero-description">
+                Qlobal innovatorlar, mütəfəkkirlər və problem həll edənlər icmasına qoşulun. 
+                Dünyanın ən mürəkkəb çətinliklərini birlikdə dəf edək.
+            </p>
 
-    .card-title {
-        display: -webkit-box;
-        display: box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        box-orient: vertical;
-        overflow: hidden;
-        height: 3rem;
-    }
+            <div class="radial-glow-box">
+                <form action="{% url 'home' %}" method="GET" class="search-form-wrapper">
+                    <div class="search-input-inner">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" name="q" placeholder="Məsələn: Süni İntellekt" value="{{ search_query|default:'' }}">
+                    </div>
+                </form>
+                
+                <div class="hero-cta-buttons">
+                    <a href="{% url 'create_idea' %}" class="btn-blue-solid">
+                        <i class="fa-regular fa-lightbulb me-2"></i> İdeya Paylaş
+                    </a>
+                    <a href="#explore" class="btn-white-solid">
+                        <i class="fa-regular fa-compass me-2"></i> Həlləri Kəşf Et
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    .form-control:focus {
-        box-shadow: 0 10px 20px rgba(13, 110, 253, 0.1) !important;
-    }
-</style>
+<div class="ideas-full-wrapper" id="explore">
+    <div class="custom-container">
+        <div class="section-heading text-center">
+            <h2>Seçilmiş İdeya Blokları</h2>
+            <p>İcmamız tərəfindən real dünya problemlərinə təklif olunan innovativ həlləri kəşf edin.</p>
+        </div>
+
+        <div class="ideas-grid">
+            {% for idea in ideas %}
+            <div class="mass-idea-card">
+                <a href="{% url 'idea_detail' idea.pk %}" class="card-link-wrapper">
+                    <div class="card-image-area">
+                        {% if idea.image %}
+                            <img src="{{ idea.image.url }}" alt="{{ idea.title }}">
+                        {% else %}
+                            <div class="img-empty">MassSolve İdeya</div>
+                        {% endif %}
+                    </div>
+                </a>
+
+                <div class="card-content-area">
+                    <a href="{% url 'idea_detail' idea.pk %}" class="text-decoration-none">
+                        <h3 class="card-heading">{{ idea.title }}</h3>
+                    </a>
+                    <p class="card-desc">{{ idea.description|truncatewords:15 }}</p>
+                    
+                    <div class="card-user-row">
+                        <div class="user-pill">
+                            <a href="{% url 'profile' idea.author.username %}" class="d-flex align-items-center text-decoration-none text-dark">
+                                {% if idea.author.profile.avatar %}
+                                    <img src="{{ idea.author.profile.avatar.url }}">
+                                {% else %}
+                                    <div class="avatar-letter">{{ idea.author.username|first|upper }}</div>
+                                {% endif %}
+                                <span class="ms-2">{{ idea.author.username }}</span>
+                            </a>
+                        </div>
+
+                        <div class="card-metrics">
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'vote_idea' idea.pk %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="vote-action-btn {% if user in idea.votes.all %}voted{% endif %}">
+                                        <i class="fa-solid fa-circle-chevron-up"></i> 
+                                        <span class="ms-1">{{ idea.total_votes }} Səs</span>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="vote-action-btn">
+                                    <i class="fa-regular fa-circle-chevron-up"></i> 
+                                    <span class="ms-1">{{ idea.total_votes }} Səs</span>
+                                </a>
+                            {% endif %}
+
+                            <span class="stat-item ms-3">
+                                <i class="fa-regular fa-comment"></i> {{ idea.comments.count }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Hələ ki, heç bir ideya yoxdur.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5 pb-5">
+            <button class="btn-dark-pill">Bütün İdeyalar</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer-full-wrapper">
+    <div class="custom-container">
+        <div class="footer-columns">
+            <div class="footer-col-brand">
+                <div class="f-logo">
+                    <i class="fa-regular fa-lightbulb"></i>
+                    <span>MassSolve</span>
+                </div>
+                <p>Kollektiv innovasiya vasitəsilə icmaları mürəkkəb problemləri həll etmək üçün gücləndiririk.</p>
+            </div>
+            <div class="col-md-3">
+                <h5 class="text-white fw-bold mb-4">Platforma</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'team_list' %}" class="ms-footer-link">İdeyaları Kəşf et</a></li>
+                    
+                    <li><a href="{% url 'challenge_list' %}" class="ms-footer-link">Aktiv Yarışlar</a></li>
+                    
+                    <li><a href="{% url 'create_team' %}" class="ms-footer-link">İdeya Göndər</a></li>
+                    
+                    <li><a href="{% url 'leaderboard' %}" class="ms-footer-link">Liderlər Lövhəsi</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h5 class="text-white fw-bold mb-4">Resurslar</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'resources' %}#about" class="ms-footer-link">Haqqımızda</a></li>
+                    <li><a href="{% url 'resources' %}#how-it-works" class="ms-footer-link">Necə İşləyir?</a></li>
+                    <li><a href="{% url 'resources' %}#rules" class="ms-footer-link">Qaydalar</a></li>
+                    <li><a href="{% url 'resources' %}#faq" class="ms-footer-link">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Əlaqə</h4>
+                <div class="f-socials">
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/feed/"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#"><i class="fa-brands fa-github"></i></a>
+                    <a href="#"><i class="fa-regular fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>© 2026 MassSolve. Bütün hüquqlar qorunur.</p>
+            <div class="f-legal">
+                <a href="{% url 'legal_detail' 'privacy' %}" class="text-white-50 text-decoration-none">Məxfillik Siyasəti</a>
+                <a href="{% url 'legal_detail' 'terms' %}" class="text-white-50 text-decoration-none">İstifadə Şərtləri</a>
+            </div>
+        </div>
+    </div>
+</footer>
 {% endblock %}

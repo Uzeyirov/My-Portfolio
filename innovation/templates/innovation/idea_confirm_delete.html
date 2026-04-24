@@ -1,20 +1,47 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}İdeyanı Sil | MassSolve{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'innovation/css/idea_confirm_delete.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <div class="card border-0 shadow-lg p-5" style="border-radius: 25px;">
-                <i class="fa-solid fa-triangle-exclamation fa-4x text-danger mb-4"></i>
-                <h2 class="fw-bold">İdeyanı silmək?</h2>
-                <p class="text-muted">"<strong>{{ idea.title }}</strong>" ideyasını silməyə əminsiniz? Bu əməliyyat geri qaytarıla bilməz.</p>
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-bold">Bəli, Sil</button>
-                        <a href="{% url 'profile' user.username %}" class="btn btn-light btn-lg rounded-pill fw-bold">Ləğv Et</a>
-                    </div>
-                </form>
+<div class="delete-page-wrapper">
+    <div class="form-grid-pattern"></div>
+    
+    <div class="container delete-container-inner">
+        <div class="glass-delete-card text-center">
+            
+            <div class="delete-icon-wrapper mb-4">
+                <i class="fa-solid fa-triangle-exclamation fa-4x pulse-red"></i>
             </div>
+
+            <div class="delete-header mb-4">
+                <h2>İdeyanı <span>Silmək?</span></h2>
+                <div class="idea-name-box">
+                    <p class="text-muted-custom">Aşağıdakı ideya kalıcı olaraq silinəcək:</p>
+                    <h4 class="text-white fw-bold">"{{ idea.title }}"</h4>
+                </div>
+            </div>
+
+            <p class="warning-text mb-5">
+                Bu əməliyyat geri qaytarıla bilməz. Bu ideyaya bağlı olan bütün <strong>həllər</strong> və məlumatlar platformadan silinəcək.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="d-grid gap-3 mt-4">
+                    <button type="submit" class="btn btn-delete-glow py-3">
+                        <i class="fa-solid fa-trash-can me-2"></i> Bəli, Tamamilə Sil
+                    </button>
+                    <a href="{% url 'profile' user.username %}" class="btn-cancel-delete mt-2">
+                        Xeyr, Ləğv Et və Qayıt
+                    </a>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>

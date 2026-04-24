@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'innovation',
     'solutions',
     'teams',
+    'challenges',
     
 ]
 
@@ -80,8 +81,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'masssolve_db',      # pgAdmin-də yaratdığın bazanın adı
+        'USER': 'postgres',          # PostgreSQL quraşdıranda gələn standart istifadəçi adı
+        'PASSWORD': '1234',   # PostgreSQL yükləyəndə təyin etdiyin şifrə (məsələn 1234)
+        'HOST': '127.0.0.1',         # Bazanın sənin kompüterində olduğunu bildirir
+        'PORT': '5432',              # Standart port, dəyişməmisənsə belə qalır
     }
 }
 
@@ -121,13 +126,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 
-# settings.py faylının ən aşağısı
+import os
+from pathlib import Path
+
+# BASE_DIR onsuz da yuxarıda var, onu dəyişmə
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Statik faylların tənzimlənməsi
 STATIC_URL = 'static/'
 
-# Bayaq yaratdığın ana static qovluğunu da bura tanıtmalıyıq
+# BU HİSSƏNİ DÜZƏLT:
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
-# Proyekti canlıya atanda lazım olacaq (indidən qalsın)
 
+
+# settings.py faylının ən aşağısına bax
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'  # Bütün fayllar layihə kökündəki 'media' qovluğuna gedəcək
 
 # Bu hissəni əlavə et ki, Django hər app-in içindəki static qovluğunu axtarsın
 STATICFILES_FINDERS = [
@@ -137,6 +154,9 @@ STATICFILES_FINDERS = [
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# settings.py
+LOGIN_URL = '/users/login/'  # Bura sənin həqiqi login linkin olmalıdır
 
 AUTH_USER_MODEL = 'users.User'
 

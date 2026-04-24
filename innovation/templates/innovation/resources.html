@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}MassSolve | Resurslar{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Səhifə daxili naviqasiya və bölmələr */
+    html { scroll-behavior: smooth; }
+    .ms-resource-wrapper { background-color: #05070a; min-height: 100vh; color: #fff; }
+    .ms-resource-section { padding: 100px 0 60px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .ms-resource-section:last-child { border-bottom: none; }
+    
+    /* Sticky Naviqasiya */
+    .ms-sticky-sidebar { position: sticky; top: 120px; }
+    .resource-nav-link { 
+        display: block; 
+        padding: 12px 15px; 
+        color: rgba(255,255,255,0.6); 
+        text-decoration: none; 
+        border-left: 2px solid rgba(255,255,255,0.1);
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    .resource-nav-link:hover, .resource-nav-link.active { 
+        color: #00d2ff; 
+        border-left-color: #00d2ff; 
+        background: rgba(0, 210, 255, 0.05); 
+    }
+
+    /* Kart stili */
+    .ms-res-card { 
+        background: rgba(255,255,255,0.02); 
+        border: 1px solid rgba(255,255,255,0.05); 
+        border-radius: 20px; 
+        backdrop-filter: blur(10px);
+    }
+    .ms-text-cyan { color: #00d2ff; }
+    .leading-relaxed { line-height: 1.8; }
+    
+    /* Accordion (FAQ üçün) */
+    .accordion-item { background: transparent !important; border: 1px solid rgba(255,255,255,0.1) !important; margin-bottom: 10px; border-radius: 12px !important; overflow: hidden; }
+    .accordion-button { background: transparent !important; color: white !important; box-shadow: none !important; }
+    .accordion-button:not(.collapsed) { color: #00d2ff !important; }
+    .accordion-body { color: rgba(255,255,255,0.7); line-height: 1.7; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ms-resource-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="ms-sticky-sidebar">
+                    <h4 class="fw-bold mb-4 text-white">Resurslar</h4>
+                    <div class="nav flex-column">
+                        <a href="#about" class="resource-nav-link">Haqqımızda</a>
+                        <a href="#how-it-works" class="resource-nav-link">Necə İşləyir?</a>
+                        <a href="#rules" class="resource-nav-link">Qaydalar</a>
+                        <a href="#faq" class="resource-nav-link">FAQ</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <section id="about" class="ms-resource-section">
+                    <h2 class="fw-bold mb-4"><i class="fa-solid fa-circle-info ms-text-cyan me-2"></i>Haqqımızda</h2>
+                    <div class="ms-res-card p-4 p-md-5">
+                        <p class="fs-5 leading-relaxed">Azərbaycanda yüzlərlə parlaq ideya maliyyə və düzgün komanda tapmadığı üçün kağız üzərində qalır. MassSolve olaraq bizim missiyamız bu startapları <strong>kiçik kütlədən</strong> çıxarıb, onları investorlar və peşəkarlar üçün görünən etməkdir.</p>
+                        <p class="text-white-50 leading-relaxed">Biz rəqəmsal bir körpü qururuq: İdeya müəllifi ilə proqramçını, investorla startapı eyni platformada birləşdiririk. Bizim vizyonumuz, lokal problemlərə qlobal həllər istehsal edən bir ekosistem yaratmaqdır.</p>
+                    </div>
+                </section>
+
+                <section id="how-it-works" class="ms-resource-section">
+                    <h2 class="fw-bold mb-4"><i class="fa-solid fa-gears ms-text-cyan me-2"></i>Necə İşləyir?</h2>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="ms-res-card p-4 h-100 text-center">
+                                <i class="fa-solid fa-lightbulb ms-text-cyan fa-2x mb-3"></i>
+                                <h5 class="text-white">Problem Paylaş</h5>
+                                <p class="small text-white-50">Cəmiyyətdə gördüyün texnoloji və ya biznes boşluğunu qeyd et.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="ms-res-card p-4 h-100 text-center">
+                                <i class="fa-solid fa-users-gear ms-text-cyan fa-2x mb-3"></i>
+                                <h5 class="text-white">Həll Yolu Tap</h5>
+                                <p class="small text-white-50">İcma və mütəxəssislər bu problem üçün ən effektiv model təklif etsin.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="ms-res-card p-4 h-100 text-center">
+                                <i class="fa-solid fa-rocket ms-text-cyan fa-2x mb-3"></i>
+                                <h5 class="text-white">Komanda Qur</h5>
+                                <p class="small text-white-50">JoinRequest sistemi ilə mütəxəssisləri bir araya gətirib startapını başlat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="rules" class="ms-resource-section">
+                    <h2 class="fw-bold mb-4"><i class="fa-solid fa-shield-halved ms-text-cyan me-2"></i>Qaydalar</h2>
+                    <div class="ms-res-card p-4">
+                        <div class="d-flex gap-3 mb-4">
+                            <i class="fa-solid fa-check ms-text-cyan mt-1"></i>
+                            <div>
+                                <h6 class="text-white">İntellektual Mülkiyyət</h6>
+                                <p class="small text-white-50">Paylaşılan hər bir ideya müəllifə məxsusdur. MassSolve müəllif hüquqlarının qorunması üçün şəffaf müraciət sistemi tətbiq edir.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <i class="fa-solid fa-check ms-text-cyan mt-1"></i>
+                            <div>
+                                <h6 class="text-white">Etik Davranış</h6>
+                                <p class="small text-white-50">Platformada spam, saxta layihələr və qeyri-etik ünsiyyət qadağandır. Məqsədimiz keyfiyyətli Azərbaycan startaplarını yetişdirməkdir.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="faq" class="ms-resource-section">
+                    <h2 class="fw-bold mb-4"><i class="fa-solid fa-question-circle ms-text-cyan me-2"></i>Tez-tez verilən suallar</h2>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q1">
+                                    Layihəmi necə tanıtdıra bilərəm?
+                                </button>
+                            </h2>
+                            <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Layihəni MassSolve-da paylaşdıqda o, həm 'Kəşf et' bölməsində investorlara görünür, həm də 'Liderlər Lövhəsi'ndə (Leaderboard) önə çıxır.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q2">
+                                    Komandama mütəxəssis tapmaq ödənişlidir?
+                                </button>
+                            </h2>
+                            <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Xəyr, MassSolve istedadların bir araya gəlməsi üçün tamamilə pulsuz platformadır.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

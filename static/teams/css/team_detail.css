@@ -1,0 +1,170 @@
+/* --- Global & Scrollbar --- */
+.ms-detail-wrapper {
+    background: radial-gradient(circle at top right, #0a101a 0%, #05070a 100%) !important;
+    min-height: 100vh;
+    padding-top: 100px;
+    color: #e5e7eb;
+}
+
+/* Səhifə daxili kiçik scrollbar stili */
+.ms-member-list::-webkit-scrollbar {
+    width: 4px;
+}
+.ms-member-list::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 10px;
+}
+
+/* --- Breadcrumb --- */
+.ms-breadcrumb {
+    background: rgba(13, 17, 23, 0.6);
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: inline-flex;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.ms-breadcrumb .breadcrumb-item a {
+    color: #00d1ff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+.ms-breadcrumb .breadcrumb-item a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(0, 209, 255, 0.6);
+}
+
+/* --- Əsas Kart (Sol Panel) --- */
+.ms-main-card {
+    background: rgba(13, 17, 23, 0.8) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.ms-main-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #0084ff, #00d1ff);
+}
+
+.ms-team-big-logo {
+    width: 85px;
+    height: 85px;
+    background: linear-gradient(135deg, #0084ff 0%, #00d1ff 100%);
+    color: #05070a;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    font-weight: 900;
+    box-shadow: 0 0 30px rgba(0, 209, 255, 0.25);
+}
+
+.ms-description {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #9ca3af;
+    text-align: justify;
+}
+
+/* --- Sidebar Kartları (Sağ Panel) --- */
+.ms-sidebar-card {
+    background: #0d1117 !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.ms-sidebar-card:hover {
+    border-color: rgba(0, 209, 255, 0.3) !important;
+}
+
+/* --- Avatarların Qəti Ölçüləri --- */
+.ms-avatar-container, .ms-avatar-container-sm {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.ms-avatar-container {
+    width: 52px; height: 52px;
+    border: 2px solid #0084ff;
+}
+
+.ms-avatar-container-sm {
+    width: 42px; height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ms-avatar-img, .ms-avatar-img-sm {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block;
+}
+
+/* --- Status Dot --- */
+.ms-status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #28a745;
+    border: 2px solid #0d1117;
+    border-radius: 50%;
+}
+
+/* --- Recruitment Bölməsi --- */
+.ms-recruitment-detail {
+    background: linear-gradient(90deg, rgba(0, 209, 255, 0.1), transparent);
+    border-left: 4px solid #00d1ff;
+    padding: 20px;
+    border-radius: 0 15px 15px 0;
+}
+
+/* --- Düymələr --- */
+.ms-btn-neon {
+    background: transparent;
+    color: #00d1ff;
+    border: 2px solid #00d1ff;
+    border-radius: 50px;
+    padding: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ms-btn-neon:hover {
+    background: #00d1ff;
+    color: #05070a;
+    box-shadow: 0 0 25px rgba(0, 209, 255, 0.5);
+    transform: scale(1.02);
+}
+
+.ms-btn-primary {
+    background: linear-gradient(90deg, #0084ff, #00d1ff);
+    border: none;
+    color: #fff;
+    border-radius: 50px;
+    padding: 12px;
+    font-weight: 700;
+}
+
+.ms-btn-primary:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 10px 20px rgba(0, 132, 255, 0.2);
+}
+
+/* --- Köməkçi Class-lar --- */
+.ms-text-cyan { color: #00d1ff !important; }
+.ms-text-muted { color: #8b949e !important; }
+.ms-divider { border-color: rgba(255, 255, 255, 0.1); }

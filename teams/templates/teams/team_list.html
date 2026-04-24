@@ -1,112 +1,127 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Komandalar | MassSolve{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'teams/css/team_list.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <h2 class="fw-bold"><i class="fa-solid fa-people-group text-primary me-2"></i>Aktiv Komandalar</h2>
-        <a href="{% url 'create_team' %}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
-            <i class="fa-solid fa-plus me-1"></i> Komanda Yarat
-        </a>
-    </div>
+<div class="ms-teams-wrapper">
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+            <h2 class="ms-page-title fw-bold mb-0">
+                <i class="fa-solid fa-people-group ms-text-cyan me-2"></i>Aktiv Komandalar
+            </h2>
+            <a href="{% url 'create_team' %}" class="btn ms-btn-neon shadow">
+                <i class="fa-solid fa-plus me-1"></i> Komanda Yarat
+            </a>
+        </div>
 
-    <div class="row g-4">
-        {% for team in teams %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white transition-hover">
-                <div class="d-flex align-items-center gap-3 mb-3">
-                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 55px; height: 55px; font-size: 1.2rem;">
-                        {{ team.name|first|upper }}
-                    </div>
-                    <div>
-                        <h5 class="fw-bold mb-0 text-dark">{{ team.name }}</h5>
-                        <small class="text-muted">Lider: <a href="{% url 'profile' team.leader.username %}" class="text-decoration-none text-primary">@{{ team.leader.username }}</a></small>
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    <p class="text-secondary small mb-1">{{ team.description|truncatewords:15 }}</p>
-                    <a href="{% url 'team_detail' team.id %}" class="text-primary small fw-bold text-decoration-none">
-                        Davamını oxu <i class="fa-solid fa-arrow-right-long ms-1" style="font-size: 0.7rem;"></i>
-                    </a>
-                </div>
-
-                {% if team.looking_for %}
-                <div class="mb-4 py-2 px-3 bg-light rounded-4 border-start border-primary border-4">
-                    <small class="text-primary fw-bold d-block mb-1" style="font-size: 0.7rem; text-transform: uppercase;">
-                        <i class="fa-solid fa-magnifying-glass-plus me-1"></i> Axtarılır:
-                    </small>
-                    <span class="text-dark small fw-medium">{{ team.looking_for }}</span>
-                </div>
-                {% endif %}
-                
-                <div class="mt-auto pt-3 border-top">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="small">
-                            <i class="fa-solid fa-user-check text-success me-1"></i>
-                            <span class="fw-bold">{{ team.members.count }}</span> üzv
-                        </div>
-                        
-                        {% if user.is_authenticated %}
-                            {% if user == team.leader %}
-                                <span class="badge bg-dark rounded-pill px-3 py-2 small">Lidersən</span>
-                            {% elif user in team.members.all %}
-                                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 small border border-success border-opacity-25">Üzvsən</span>
+        <div class="row g-4">
+            {% for team in teams %}
+            <div class="col-md-6 col-lg-4">
+                <div class="ms-team-card h-100 shadow-lg">
+                    <div class="p-4 pb-0 d-flex align-items-center gap-3">
+                        <div class="ms-team-logo-circle">
+                            {% if team.image %}
+                                <img src="{{ team.image.url }}" alt="{{ team.name }}">
+                            {% else %}
+                                <span>{{ team.name|first|upper }}</span>
                             {% endif %}
-                        {% endif %}
+                        </div>
+                        <div class="team-title-info">
+                            <h3 class="team-name h5 fw-bold mb-1 text-white">{{ team.name }}</h3>
+                            <p class="team-leader small mb-0 ms-text-muted">Lider: <a href="{% url 'profile' team.leader.username %}" class="ms-text-cyan text-decoration-none">@{{ team.leader.username }}</a></p>
+                        </div>
                     </div>
-
-                    {% if user.is_authenticated %}
-                        {% if user == team.leader or user in team.members.all %}
-                            <a href="{% url 'team_workspace' team.id %}" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm">
-                                <i class="fa-solid fa-laptop-code me-2"></i>İş Sahəsinə Gir
+                    
+                    <div class="p-4 pt-3 d-flex flex-column h-100">
+                        <div class="mb-3">
+                            <p class="ms-card-desc mb-1 text-muted">{{ team.description|truncatewords:12 }}</p>
+                            <a href="{% url 'team_detail' team.id %}" class="ms-text-cyan small fw-bold text-decoration-none">
+                                Detallı bax <i class="fa-solid fa-arrow-right ms-1"></i>
                             </a>
-                        {% else %}
-                            <div class="d-flex gap-2">
-                                <a href="{% url 'team_detail' team.id %}" class="btn btn-outline-secondary flex-grow-1 rounded-pill py-2 fw-bold small">Detallar</a>
-                                <button class="btn btn-outline-primary flex-grow-1 rounded-pill py-2 fw-bold small" data-bs-toggle="modal" data-bs-target="#joinModal{{ team.id }}">
-                                    Qoşul
-                                </button>
-                            </div>
-                        {% endif %}
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-outline-secondary w-100 rounded-pill py-2 fw-bold">
-                            Giriş et və Qoşul
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+                        </div>
 
-        <div class="modal fade" id="joinModal{{ team.id }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 rounded-4 shadow-lg">
-                    <div class="modal-header border-0 pb-0 justify-content-center">
-                        <h5 class="fw-bold">Komandaya Müraciət</h5>
+                        {% if team.looking_for %}
+                        <div class="ms-recruitment-box mb-4">
+                            <small class="ms-recruitment-label">
+                                <i class="fa-solid fa-magnifying-glass-plus me-1"></i> Axtarılır:
+                            </small>
+                            <span class="text-white small fw-medium">{{ team.looking_for }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mt-auto pt-3 border-top border-secondary border-opacity-25">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="small ms-text-muted">
+                                    <i class="fa-solid fa-user-check text-success me-1"></i>
+                                    <span class="fw-bold text-white">{{ team.members.count }}</span> üzv
+                                </div>
+                                
+                                {% if user.is_authenticated %}
+                                    {% if user == team.leader %}
+                                        <span class="badge ms-badge-dark">Lidersən</span>
+                                    {% elif user in team.members.all %}
+                                        <span class="badge ms-badge-success">Üzvsən</span>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+
+                            {% if user.is_authenticated %}
+                                {% if user == team.leader or user in team.members.all %}
+                                    <a href="{% url 'team_workspace' team.id %}" class="btn ms-btn-primary w-100 rounded-pill py-2 fw-bold">
+                                        <i class="fa-solid fa-laptop-code me-2"></i>İş Sahəsi
+                                    </a>
+                                {% else %}
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'team_detail' team.id %}" class="btn ms-btn-outline flex-grow-1 rounded-pill py-2 fw-bold small">Profil</a>
+                                        <button class="btn ms-btn-cyan flex-grow-1 rounded-pill py-2 fw-bold small" data-bs-toggle="modal" data-bs-target="#joinModal{{ team.id }}">
+                                            Qoşul
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <a href="{% url 'login' %}" class="btn ms-btn-outline w-100 rounded-pill py-2 fw-bold">
+                                    Giriş et və Qoşul
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
-                    <form action="{% url 'send_join_request' team.id %}" method="POST">
-                        {% csrf_token %}
-                        <div class="modal-body p-4 text-center">
-                            <p class="text-muted small mb-4"><strong>{{ team.name }}</strong> komandasına qoşulmaq üçün müraciət mesajı yazın.</p>
-                            <textarea name="message" class="form-control rounded-4 border-0 bg-light p-3 shadow-none" rows="4" placeholder="Məs: Backend təcrübəm var..." required></textarea>
-                        </div>
-                        <div class="modal-footer border-0 pt-0 px-4 pb-4">
-                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">Müraciəti Göndər</button>
-                        </div>
-                    </form>
                 </div>
             </div>
-        </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <div class="bg-white p-5 rounded-4 shadow-sm border">
-                <i class="fa-solid fa-users-slash fa-3x text-muted mb-3 opacity-25"></i>
-                <p class="text-muted fs-5">Hələ heç bir aktiv komanda yoxdur.</p>
-                <a href="{% url 'create_team' %}" class="btn btn-primary rounded-pill mt-2 px-4">İlk komandanı sən yarat!</a>
+
+            <div class="modal fade" id="joinModal{{ team.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content ms-modal-content border-0 rounded-4 shadow-lg">
+                        <div class="modal-header border-0 pb-0 justify-content-center pt-4">
+                            <h5 class="fw-bold text-white">Komandaya Müraciət</h5>
+                        </div>
+                        <form action="{% url 'send_join_request' team.id %}" method="POST">
+                            {% csrf_token %}
+                            <div class="modal-body p-4 text-center">
+                                <p class="ms-text-muted small mb-4"><strong>{{ team.name }}</strong> komandasına qoşulmaq üçün müraciət mesajı yazın.</p>
+                                <textarea name="message" class="ms-form-control form-control p-3" rows="4" placeholder="Məs: Full-stack developerəm, komandanınıza kömək edə bilərəm..." required></textarea>
+                            </div>
+                            <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                                <button type="submit" class="btn ms-btn-primary w-100 rounded-pill py-2 fw-bold">Müraciəti Göndər</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="ms-empty-box p-5">
+                    <i class="fa-solid fa-users-slash fa-3x text-muted mb-3 opacity-25"></i>
+                    <p class="ms-text-muted fs-5">Hələ heç bir aktiv komanda yoxdur.</p>
+                    <a href="{% url 'create_team' %}" class="btn ms-btn-neon rounded-pill mt-2 px-4">İlk komandanı yarat</a>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}

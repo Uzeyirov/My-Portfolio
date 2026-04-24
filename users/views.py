@@ -1,21 +1,20 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib import messages
 from .forms import RegistrationForm
+from django.contrib.auth.decorators import login_required
 
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            # Qeydiyyatdan keçən istifadəçini dərhal sistemə daxil edirik
-            login(request, user) 
-            # İndi isə onu Login səhifəsinə yox, Ana Səhifəyə (home) atırıq
-            return redirect('home') 
+            # form.save() avtomatik olaraq username, email və occupation-ı bazaya yazacaq
+            form.save() 
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Hesab yaradıldı: {username}! İndi daxil ola bilərsiniz.')
+            return redirect('login')
     else:
         form = RegistrationForm()
     return render(request, 'users/register.html', {'form': form})
-
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def profile(request):

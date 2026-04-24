@@ -12,8 +12,11 @@ class Team(models.Model):
     leader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='owned_teams')
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='teams_joined', blank=True)
     idea = models.ForeignKey(Idea, on_delete=models.SET_NULL, null=True, blank=True, related_name='project_teams')
+    # Yeni əlavə edəcəyimiz şəkil sahəsi:
+    image = models.ImageField(upload_to='team_logos/', blank=True, null=True, verbose_name="Komanda Loqosu")
     created_at = models.DateTimeField(auto_now_add=True)
     is_looking_for_members = models.BooleanField(default=True, verbose_name="Üzv axtarılır")
+
 
     def __str__(self):
         return self.name
@@ -38,7 +41,7 @@ class JoinRequest(models.Model):
 class TeamMessage(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='messages')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(blank=True, null=True)  # blank və null əlavə etdik
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:

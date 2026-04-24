@@ -1,77 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="register-wrapper" style="background-color: #f8f9fa; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 80px 0;">
+    <div class="register-card" style="background: #ffffff; width: 100%; max-width: 450px; padding: 35px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+        
+        <div class="text-center mb-4">
+            <h2 class="fw-bold" style="color: #007bff;">MassSolve</h2>
+            <p class="text-muted small">Yeni hesab yaradın</p>
+        </div>
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-lg border-0" style="border-radius: 20px;">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <h2 class="fw-bold text-primary">MassSolve</h2>
-                        <p class="text-muted">Yeni hesab yaradın</p>
-                    </div>
+        <form method="POST">
+            {% csrf_token %}
 
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        {% for field in form %}
-                            <div class="mb-3">
-                                <label class="form-label fw-bold small text-secondary">{{ field.label }}</label>
-                                
-                                {# Checkbox-lar (Tələbə/İstehsalçı) üçün xüsusi dizayn #}
-                                {% if field.field.widget.input_type == "checkbox" %}
-                                    <div class="form-check form-switch p-2 border rounded bg-light">
-                                        {{ field }}
-                                        <label class="form-check-label ms-2 small">Aktiv et</label>
-                                    </div>
-                                {% else %}
-                                    {# Mətn xanaları üçün Bootstrap dizaynı #}
-                                    <input type="{{ field.field.widget.input_type }}" 
-                                           name="{{ field.html_name }}" 
-                                           class="form-control form-control-lg bg-light border-0" 
-                                           placeholder="{{ field.label }}..."
-                                           style="font-size: 0.9rem;"
-                                           {% if field.value %}value="{{ field.value }}"{% endif %}>
-                                {% endif %}
-
-                                {# Xəta mesajları #}
-                                {% for error in field.errors %}
-                                    <div class="text-danger mt-1" style="font-size: 0.75rem;">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
-
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg shadow-sm" style="border-radius: 12px; font-size: 1rem;">
-                                Qeydiyyatı Tamamla
-                            </button>
-                        </div>
-                    </form>
-
-                    <div class="text-center mt-4">
-                        <p class="mb-0 small text-muted">Artıq hesabınız var? 
-                            <a href="{% url 'login' %}" class="text-primary fw-bold text-decoration-none">Giriş edin</a>
-                        </p>
-                    </div>
-                </div>
+            {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label text-secondary small fw-bold" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="text-danger" style="font-size: 0.75rem;">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
             </div>
+            {% endfor %}
+
+            {% if form.password_confirmation %}
+            <div class="mb-4">
+                <label class="form-label text-secondary small fw-bold">Şifrə təsdiqi</label>
+                {{ form.password_confirmation }}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold mt-2" style="border-radius: 8px;">
+                Qeydiyyatı Tamamla
+            </button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <p class="small text-muted">Hesabınız var? <a href="{% url 'login' %}" class="fw-bold text-decoration-none">Daxil olun</a></p>
         </div>
     </div>
 </div>
 
 <style>
-    /* Django-nun yaratdığı checkbox-u Bootstrap form-check-input klasına uyğunlaşdırırıq */
-    input[type="checkbox"] {
-        width: 40px;
-        height: 20px;
-        cursor: pointer;
-        float: left;
+    /* Inputların içində yazmağı bloklayan hər hansı pointer-events-i ləğv edirik */
+    .form-control {
+        background-color: #ebf2ff !important;
+        border: 1px solid transparent !important;
+        border-radius: 8px !important;
+        padding: 10px 15px !important;
+        color: #333 !important;
+        display: block;
+        width: 100%;
+        pointer-events: auto !important; /* Klikləməni məcburi aktiv edir */
     }
     .form-control:focus {
         background-color: #fff !important;
-        border: 1px solid #0d6efd !important;
-        box-shadow: none;
+        border: 1px solid #007bff !important;
+        box-shadow: none !important;
     }
 </style>
 {% endblock %}

@@ -1,0 +1,192 @@
+/* 1. Ümumi Səhifə Ayarı - Navbarı ayırmaq üçün */
+.ms-main-wrapper {
+    padding-top: 100px !important; /* Navbarın altında boşluq yaradır */
+    min-height: 100vh;
+    background-color: #0f1113; /* Ana fon */
+}
+
+/* 2. Çat Konteyneri */
+#chat-log {
+    height: 500px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #16191c; /* Çatın iç fonu bir az fərqlənsin */
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    scrollbar-width: thin;
+    scrollbar-color: #343a40 transparent;
+}
+
+/* 3. Mesaj Blokları */
+.message-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+    position: relative;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Sənin mesajların sağa, başqası sola */
+.message-item.mine {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+/* İstifadəçi adı - Parlaq və təmiz */
+.username {
+    font-size: 0.85rem;
+    color: #0dcaf0; 
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.mine .username {
+    color: #ffc107; 
+}
+
+/* 4. Mesaj Balonu Wrapper */
+.bubble-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.mine .bubble-wrapper {
+    flex-direction: row-reverse;
+}
+
+/* 5. Mesaj Balonu - Əsas Dizayn (Təmiz və Oxunaqlı) */
+.bubble {
+    padding: 12px 18px;
+    border-radius: 18px;
+    background: #2b3035; /* Digər şəxslərin mesajı */
+    color: #ffffff !important;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Sənin mesajın - Daha "Premium" görünüş */
+.mine .bubble {
+    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+    border: none;
+    color: #ffffff !important;      /* Yazını mütləq ağ edirik */
+    font-weight: 500;               /* Bir az qalınlaşdırırıq ki, dumanlı görünməsin */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2); /* Yazının altına yüngül kölgə (oxunaqlıq üçün) */
+}
+
+/* 6. Media elementləri */
+.chat-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.chat-file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 10px 14px;
+    border-radius: 12px;
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* 7. Vaxt - Görünən etdik */
+.time {
+    font-size: 0.75rem;
+    color: #8a9199 !important;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* 8. Input hissəsinin dizaynı (Footer) */
+.card-footer {
+    background: #1a1d21 !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 15px !important;
+}
+
+#chat-message-input {
+    background: #212529 !important;
+    border: 1px solid #343a40 !important;
+    color: white !important;
+}
+
+#chat-message-input::placeholder {
+    color: #6c757d;
+}
+
+/* Scrollbar (Chrome üçün) */
+#chat-log::-webkit-scrollbar { width: 5px; }
+#chat-log::-webkit-scrollbar-thumb { background: #343a40; border-radius: 10px; }
+
+
+
+/* Tarix (Date) - Çatın ortasındakı o dumanlı hissəni təmizləyirik */
+.badge.bg-secondary.bg-opacity-10 {
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Bir az daha aydın fon */
+    color: #f8f9fa !important; /* Yazı rəngini tam ağa yaxın edirik */
+    font-size: 0.8rem;
+    padding: 6px 15px;
+    font-weight: 500;
+    text-shadow: none; /* Duman yaradan kölgəni sildik */
+}
+
+/* Mesajın içindəki yazı - Blur olmaması üçün */
+.bubble .message-content, .bubble {
+    color: #ffffff !important;
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.4;
+    text-rendering: optimizeLegibility; /* Yazını daha kəskin edir */
+}
+
+/* Sənin mesajın (Göy fon) */
+.mine .bubble {
+    background: #007bff !important; /* Sadə və kəskin göy */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Vaxt (Time) - Mesajın yanındakı balaca saat */
+.time {
+    color: #ced4da !important;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+
+
+
+/* GreenTech komandasının təsvir yazısı */
+.card-body p.text-muted.small {
+    color: #ced4da !important; /* Açıq boz rəng */
+    font-size: 0.9rem !important; /* Bir az böyütdük */
+    font-weight: 500 !important;
+    opacity: 1 !important; /* Əgər opacity az idisə, tam etdik */
+}
+
+/* Gələn Müraciətlər bölməsindəki "Yeni müraciət yoxdur" yazısı */
+.d-flex.flex-column.gap-3 p.small.text-muted.text-center {
+    color: #adb5bd !important; /* Yazını daha parlaq etdik */
+    background: rgba(255, 255, 255, 0.05); /* Arxa fona yüngül işıq verdik */
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+}

@@ -1,113 +1,213 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="az">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MassSolve | {% block title %}{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+
     <style>
-        body { background-color: #f4f7f6; }
-        .navbar { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .navbar-brand { font-weight: 800; color: #0d6efd !important; letter-spacing: -0.5px; }
-        .nav-link { font-weight: 500; color: #555 !important; transition: 0.3s; }
-        .nav-link:hover { color: #0d6efd !important; }
-        .btn-auth { font-weight: 600; border-radius: 8px; }
-        .user-link { text-decoration: none; color: #333; font-weight: 600; transition: 0.2s; }
-        .user-link:hover { color: #0d6efd; }
-        .nav-avatar { width: 32px; height: 32px; object-fit: cover; border: 1px solid #0d6efd; padding: 1px; }
-        .notification-dot { 
-            position: absolute; 
-            top: 2px; 
-            right: 0; 
-            padding: 4px; 
-            background-color: #dc3545; 
-            border: 2px solid #fff; 
-            border-radius: 50%; 
+        :root {
+            --bg-dark: #0B0F19;
+            --primary-blue: #0084FF;
         }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            color: #ffffff; /* Yazıların görünməsi üçün ağ rəng */
+        }
+
+        /* Modern Glassmorphism Navbar */
+        .navbar {
+            transition: all 0.3s ease;
+            padding: 20px 0;
+            background: transparent;
+            border-bottom: 1px solid transparent;
+        }
+
+        .navbar.scrolled {
+            background: rgba(11, 15, 25, 0.85) !important;
+            backdrop-filter: blur(15px);
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: #fff !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand i { color: var(--primary-blue); }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-weight: 500;
+            padding: 0 15px !important;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff !important;
+        }
+
+        .nav-link.special-link {
+            color: var(--primary-blue) !important;
+        }
+
+        /* İstifadəçi Profili və Bildirişlər */
+        .nav-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(0, 132, 255, 0.3);
+        }
+
+        .notification-btn {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .dot {
+            position: absolute;
+            top: 0; right: 0;
+            width: 8px; height: 8px;
+            background: #ff4d4d;
+            border-radius: 50%;
+            border: 2px solid var(--bg-dark);
+        }
+
+        /* Mesajların (Alerts) Mövqeyi */
+        .message-container {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 350px;
+        }
+
+        /* Dropdown stilini düzəltmək üçün (qaranlıq modda ağ qalmasın) */
+        .dropdown-menu {
+            background-color: #1a1f2b;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .dropdown-item { color: rgba(255,255,255,0.8); }
+        .dropdown-item:hover { background-color: var(--primary-blue); color: #fff; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg py-3 sticky-top">
-    <div class="container">
-        <a class="navbar-brand fs-3" href="{% url 'home' %}">
-            <i class="fa-solid fa-lightbulb me-2"></i>MassSolve
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid px-md-5">
+        <a class="navbar-brand" href="{% url 'home' %}">
+        
+            <i class="fa-regular fa-lightbulb"></i> MassSolve
+        
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarMain">
+        <div class="collapse navbar-collapse" id="navMain">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link px-3" href="{% url 'home' %}">Ana Səhifə</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3" href="{% url 'solutions_home' %}">Həllər</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3" href="{% url 'team_list' %}">Komandalar</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Kəşf et</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'solutions_home' %}">Həllər</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'team_list' %}">Komandalar</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'challenge_list' %}">Aktiv Yarışlar</a></li>
                 {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link px-3 fw-bold text-primary" href="{% url 'create_idea' %}">+ Yeni İdeya</a>
-                </li>
+    
+                 
                 {% endif %}
             </ul>
 
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-4">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'manage_requests' %}" class="nav-link position-relative px-2">
-                        <i class="fa-solid fa-bell fs-5"></i>
-                        <span class="notification-dot"></span>
+                    <a href="{% url 'manage_requests' %}" class="notification-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="dot"></span>
                     </a>
 
-                    <a href="{% url 'profile' user.username %}" class="user-link d-flex align-items-center gap-2">
-                        {% if user.profile.avatar %}
-                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle nav-avatar">
-                        {% else %}
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.8rem;">
-                                {{ user.username|first|upper }}
-                            </div>
-                        {% endif %}
-                        <span class="d-none d-md-inline">{{ user.username }}</span>
-                    </a>
-                    
-                    <form action="{% url 'logout' %}" method="post" class="m-0">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger btn-sm px-3 ms-2">
-                            <i class="fa-solid fa-power-off"></i>
-                        </button>
-                    </form>
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" data-bs-toggle="dropdown">
+                            {% if user.profile.avatar %}
+                                <img src="{{ user.profile.avatar.url }}" class="nav-avatar">
+                            {% else %}
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 35px; height: 35px;">
+                                    {{ user.username|first|upper }}
+                                </div>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-3">
+                            <li><a class="dropdown-item" href="{% url 'profile' user.username %}">Profil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{% url 'logout' %}" method="post" class="px-3">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-danger w-100">Çıxış</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-link text-decoration-none text-dark me-2">Giriş</a>
-                    <a href="{% url 'register' %}" class="btn btn-primary btn-auth px-4 shadow-sm">Qeydiyyat</a>
+                    <a href="{% url 'login' %}" class="nav-link">Giriş</a>
+                    <a href="{% url 'register' %}" class="btn btn-primary px-4 py-2 rounded-3 fw-bold">Qeydiyyat</a>
                 {% endif %}
             </div>
         </div>
     </div>
 </nav>
 
-<div class="container mt-4 pb-5">
+<div class="message-container">
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm mb-4">
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-lg border-0 rounded-3">
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <button type="button" class="btn-close" data-bs-alert="alert"></button>
             </div>
         {% endfor %}
     {% endif %}
-
-    {% block content %}
-    {% endblock %}
 </div>
 
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-{% block extra_js %}
-{% endblock %}
+<script>
+    // Navbar scroll effekti
+    window.addEventListener('scroll', function() {
+        const nav = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+</script>
+
+{% block extra_js %}{% endblock %}
+
 </body>
 </html>

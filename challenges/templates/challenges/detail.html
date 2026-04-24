@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'challenges/css/challenge_detail.css' %}">
+<style>
+    .submissions-table { background: rgba(255, 255, 255, 0.05); border-radius: 15px; overflow: hidden; }
+    .table-dark { --bs-table-bg: transparent; }
+    
+    /* Mətnin səliqəli görünməsi və sətirdən-sətrə keçməsi üçün CSS */
+    .sub-description-box { 
+        font-size: 0.9rem; 
+        color: #e0e0e0; 
+        background: rgba(0, 0, 0, 0.25); 
+        padding: 12px; 
+        border-radius: 10px; 
+        margin-bottom: 10px; 
+        border-left: 4px solid #17a2b8;
+        /* DÜZƏLİŞ EDİLEN HİSSƏ: */
+        max-width: 400px;           /* Mətnin maksimum enini məhdudlaşdırırıq */
+        word-wrap: break-word;      /* Uzun sözləri kəsir */
+        overflow-wrap: break-word; 
+        white-space: pre-wrap;     /* Həm Enter-ləri tanıyır, həm də avtomatik aşağı düşür */
+        line-height: 1.5;
+    }
+
+    /* Cədvəlin sabit qalması üçün */
+    .table { table-layout: fixed; width: 100%; }
+    .table td { word-wrap: break-word; overflow-wrap: break-word; }
+
+    .score-input { 
+        width: 75px; 
+        background: rgba(255,255,255,0.1); 
+        border: 1px solid #17a2b8; 
+        color: white; 
+        border-radius: 6px; 
+        text-align: center; 
+        padding: 5px;
+    }
+
+    .user-feedback-section {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="detail-glass-container p-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h1 class="text-white fw-bold">{{ challenge.title }}</h1>
+                        <p class="text-info">Təşkilatçı: {{ challenge.organizer.username }}</p>
+                    </div>
+                    {% if request.user == challenge.organizer %}
+                    <a href="{% url 'delete_challenge' challenge.pk %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Silmək istədiyinizdən əminsiniz?')">
+                        <i class="fa-solid fa-trash me-1"></i> Yarışı Sil
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="timer-display my-4" id="timer-display">Yüklənir...</div>
+                
+                <div class="text-white mt-3 mb-5 fs-5">
+                    {{ challenge.description|linebreaks }}
+                </div>
+
+                {% if request.user == challenge.organizer and submissions %}
+                <div class="submissions-table p-4 mt-5">
+                    <h4 class="text-white mb-4"><i class="fa-solid fa-star me-2 text-warning"></i> İştirakçıların Həlləri</h4>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle">
+                            <thead>
+                                <tr class="text-info text-uppercase small">
+                                    <th style="width: 20%;">İştirakçı</th>
+                                    <th style="width: 50%;">Əsaslandırma və Fayllar</th>
+                                    <th style="width: 15%;">Xal</th>
+                                    <th style="width: 15%;">Təsdiq</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sub in submissions %}
+                                <tr>
+                                    <td><span class="badge bg-secondary px-3 py-2">{{ sub.solver.username }}</span></td>
+                                    <td>
+                                        <div class="sub-description-box">
+                                            {{ sub.description|default:"Təsvir yazılmayıb." }}
+                                        </div>
+                                        <div class="mt-2">
+                                            {% if sub.link_submission %}<a href="{{ sub.link_submission }}" target="_blank" class="btn btn-sm btn-info me-2"><i class="fa-solid fa-link"></i> Link</a>{% endif %}
+                                            {% if sub.file_submission %}<a href="{{ sub.file_submission.url }}" class="btn btn-sm btn-warning"><i class="fa-solid fa-file-download"></i> Fayl</a>{% endif %}
+                                        </div>
+                                    </td>
+                                    <form action="{% url 'grade_submission' sub.pk %}" method="POST">
+                                        {% csrf_token %}
+                                        <td>
+                                            <input type="number" name="score" value="{{ sub.score|default:0 }}" min="0" max="100" class="score-input">
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-sm btn-success w-100">Saxla</button>
+                                        </td>
+                                    </form>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if user_submission %}
+                <div class="user-feedback-section p-4 mt-5">
+                    <h4 class="text-white fw-bold mb-4"><i class="fa-solid fa-user-gear me-2 text-success"></i> Sizin Göndərişiniz</h4>
+                    
+                    <div class="mb-4">
+                        <label class="text-info small fw-bold mb-2">Təqdim etdiyiniz əsaslandırma:</label>
+                        <div class="sub-description-box" style="background: rgba(255,255,255,0.05); max-width: 100%;">
+                            {{ user_submission.description }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-3 rounded bg-black bg-opacity-25 border border-secondary">
+                        <span class="text-white-50">Qiymətləndirmə:</span>
+                        {% if user_submission.score > 0 or challenge.status == 'FINISHED' %}
+                            <div class="text-end">
+                                <span class="h4 text-info mb-0">{{ user_submission.score }}</span>
+                                <span class="text-info small">/ 100</span>
+                            </div>
+                        {% else %}
+                            <span class="badge bg-warning text-dark px-3">Gözləmədə...</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-4">
+                <div class="submission-box mt-4 p-4 shadow-lg" style="background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                    <h5 class="text-white mb-4">Həllini Təqdim Et</h5>
+                    
+                    {% if not is_expired and challenge.status == 'ACTIVE' %}
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="text-white small custom-form">
+                                {{ form.as_p }}
+                            </div>
+                            <button class="btn btn-info w-100 fw-bold py-2 mt-3 shadow">Həlli Göndər</button>
+                        </form>
+                    {% elif is_expired %}
+                        <div class="alert alert-warning bg-dark text-warning border-warning mt-3 text-center small">
+                            <i class="fa-solid fa-clock me-2"></i> Yarışın müddəti başa çatıb.
+                        </div>
+                    {% else %}
+                        <p class="text-danger bg-dark p-3 rounded border border-danger text-center small">
+                            <i class="fa-solid fa-lock me-2"></i> Həll qəbulu dayandırılıb.
+                        </p>
+                    {% endif %}
+
+                    {% if user_submission %}
+                    <div class="mt-4 p-3 rounded bg-success bg-opacity-10 border border-success text-center">
+                        <p class="text-success small mb-0"><i class="fa-solid fa-circle-check me-2"></i> Həlliniz qəbul edilib.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'challenges/js/challenge_detail.js' %}"></script>
+<script>
+    initChallengeTimer("{{ challenge.deadline|date:'Y-m-d H:i:s' }}");
+</script>
+{% endblock %}

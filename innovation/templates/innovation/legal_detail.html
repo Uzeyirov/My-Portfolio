@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}MassSolve | {{ doc.title }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 80px; min-height: 100vh; color: #fff;">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="fw-bold mb-4" style="color: #00d2ff;">{{ doc.title }}</h1>
+            <p class="text-white-50 small mb-5">Son yenilənmə: {{ doc.updated_at|date:"d F Y" }}</p>
+            
+            <div class="legal-content" style="line-height: 1.8; font-size: 1.1rem; color: rgba(255,255,255,0.85);">
+                {{ doc.content|linebreaks }}
+            </div>
+            
+            <div class="mt-5 pt-4 border-top border-secondary">
+                <a href="{% url 'home' %}" class="btn btn-outline-info" style="border-color: #00d2ff; color: #00d2ff;">
+                    Ana Səhifəyə Qayıt
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

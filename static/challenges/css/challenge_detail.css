@@ -1,0 +1,22 @@
+/* Detal səhifəsinə özəl glassmorphism və taymer dizaynı */
+.detail-glass-container {
+    background: rgba(10, 10, 10, 0.6);
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.timer-display {
+    font-size: 2rem;
+    color: #00d2ff;
+    text-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.submission-box {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 4px solid #00d2ff;
+    padding: 20px;
+}

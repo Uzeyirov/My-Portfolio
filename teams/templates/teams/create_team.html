@@ -1,51 +1,86 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Komanda Yarat | MassSolve{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'teams/css/create_team.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-7">
-            <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white">
-                <div class="text-center mb-5">
-                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
-                        <i class="fa-solid fa-users-gear fa-2x"></i>
-                    </div>
-                    <h2 class="fw-bold">Yeni Komanda Qur</h2>
-                    <p class="text-muted">İdeyanı gerçəkləşdirmək üçün mühəndis və vizyonerləri topla.</p>
-                </div>
-
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Komandanın Adı</label>
-                        <input type="text" name="name" class="form-control rounded-pill border-light bg-light px-4 py-2" placeholder="Məs: GreenTech Solvers" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Komandanın Məqsədi</label>
-                        <textarea name="description" class="form-control rounded-4 border-light bg-light px-4 py-3" rows="4" placeholder="Komanda hansı ideya üzərində işləyəcək?" required></textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Kimləri Axtarırsan?</label>
-                        <input type="text" name="looking_for" class="form-control rounded-pill border-light bg-light px-4 py-2" placeholder="Məs: Backend, Designer, Marketing (Vergüllə ayır)">
-                        <div class="form-text small text-muted ps-2">
-                            <i class="fa-solid fa-circle-info me-1"></i> Axtardığın mütəxəssisləri vergüllə ayıraraq yaz.
+<div class="ms-create-wrapper">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9">
+                <div class="ms-form-card card border-0 shadow-lg rounded-4 p-4 p-md-5">
+                    
+                    <div class="text-center mb-5">
+                        <div class="ms-icon-box mx-auto mb-3">
+                            <i class="fa-solid fa-users-gear fa-2x"></i>
                         </div>
+                        <h2 class="fw-bold text-white mb-2">Yeni Komanda Qur</h2>
+                        <p class="ms-text-muted">İdeyanı gerçəkləşdirmək üçün mühəndis və vizyonerləri bir araya gətir.</p>
                     </div>
 
-                    <div class="alert alert-info border-0 rounded-4 small mb-4">
-                        <i class="fa-solid fa-circle-info me-2"></i> Komanda yarandıqdan sonra sən avtomatik olaraq <strong>Lider</strong> statusu alacaqsan.
-                    </div>
+                    <form method="POST" class="ms-neon-form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label text-white fw-bold ms-2">Komanda Loqosu</label>
+                            <div class="input-group ms-input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                <input type="file" name="image" class="form-control" accept="image/*">
+                            </div>
+                            <div class="form-text ms-text-muted ps-2 mt-2">
+                            
+                            </div>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill py-3 fw-bold shadow-sm">
-                        <i class="fa-solid fa-rocket me-2"></i>Komandanı Başlat
-                    </button>
-                    <a href="{% url 'team_list' %}" class="btn btn-link w-100 mt-3 text-muted text-decoration-none">Ləğv et</a>
-                </form>
+                        <div class="mb-4">
+                            <label class="form-label text-white fw-bold ms-2">Komandanın Adı</label>
+                            <div class="input-group ms-input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-signature"></i></span>
+                                <input type="text" name="name" class="form-control" placeholder="Məs: GreenTech Solvers" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-white fw-bold ms-2">Komandanın Missiyası</label>
+                            <textarea name="description" class="form-control ms-textarea" rows="4" placeholder="Komanda hansı problem üzərində fokuslanacaq?" required></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-white fw-bold ms-2">Kimləri Axtarırsan?</label>
+                            <div class="input-group ms-input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-search-plus"></i></span>
+                                <input type="text" name="looking_for" class="form-control" placeholder="Məs: Django, UI/UX, Biznes Analitik">
+                            </div>
+                            <div class="form-text ms-text-muted ps-2 mt-2">
+                                <i class="fa-solid fa-circle-info me-1 ms-text-cyan"></i> Rolları vergüllə ayıraraq qeyd et.
+                            </div>
+                        </div>
+
+                        <div class="ms-info-alert mb-5 d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-shield-halved fa-lg ms-text-cyan"></i>
+                            <span class="small text-white-50">Sən avtomatik olaraq bu komandanın <strong>Baş Lideri</strong> təyin olunacaqsan.</span>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn ms-btn-primary py-3 fw-bold">
+                                <i class="fa-solid fa-rocket me-2"></i>KOMANDANI BAŞLAT
+                            </button>
+                            <a href="{% url 'team_list' %}" class="btn ms-btn-cancel py-2 text-decoration-none">
+                                Geri qayıt
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'teams/js/create_team.js' %}"></script>
 {% endblock %}

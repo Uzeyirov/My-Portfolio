@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}MassSolve | Lider İdeyalar{% endblock %}
+
+{% block content %}
+<div class="leaderboard-wrapper" style="background-color: #05070a; min-height: 100vh; padding-top: 100px; padding-bottom: 50px;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-white">Top 10 <span style="color: #00d2ff;">İdeya</span></h1>
+            <p class="text-white-50">İcma tərəfindən ən yüksək səs almış layihələr.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                {% for idea in top_ideas %}
+                <div class="rank-card p-3 d-flex align-items-center mb-3" 
+                     style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 15px; transition: 0.3s;">
+                    
+                    <div class="rank-number" style="font-size: 1.8rem; font-weight: bold; width: 70px; color: #00d2ff; text-align: center;">
+                        #{{ forloop.counter }}
+                    </div>
+
+                    <div class="ms-3 flex-grow-1">
+                        <h5 class="text-white mb-1">{{ idea.title }}</h5>
+                        <small class="text-white-50">
+                            Müəllif: 
+                            <a href="{% url 'profile' idea.author.username %}" style="color: #00d2ff; text-decoration: none;">
+                                @{{ idea.author.username }}
+                            </a>
+                        </small>
+                    </div>
+
+                    <div class="text-end">
+                        <div style="background: rgba(0, 210, 255, 0.1); color: #00d2ff; padding: 10px 25px; border-radius: 30px; font-weight: bold; font-size: 1.1rem;">
+                            <i class="fa-solid fa-fire-flame-curved me-2"></i> {{ idea.votes_count }} Səs
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center text-white-50 p-5">Hələlik səs verilmiş ideya yoxdur.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

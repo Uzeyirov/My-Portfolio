@@ -13,18 +13,21 @@ def team_list(request):
 @login_required
 def create_team(request):
     if request.method == 'POST':
+        # Şəkil gəldiyi üçün request.FILES mütləq olmalıdır
         name = request.POST.get('name')
         description = request.POST.get('description')
-        looking_for = request.POST.get('looking_for') # HTML-dən bu adı tuturuq
+        looking_for = request.POST.get('looking_for')
+        image = request.FILES.get('image') # Şəkli buradan tuturuq
 
         team = Team.objects.create(
             name=name,
             description=description,
-            looking_for=looking_for, # Bazaya yazırıq
+            looking_for=looking_for,
+            image=image, # Modeldə yaratdığımız sahəyə ötürürük
             leader=request.user
         )
-        team.members.add(request.user)
         return redirect('team_list')
+    
     return render(request, 'teams/create_team.html')
 
 def team_list(request):
@@ -133,7 +136,7 @@ def send_message(request, team_id):
 
         # Təhlükəsizlik: Yalnız üzvlər mesaj yaza bilsin
         if request.user == team.leader or request.user in team.members.all():
-            content = request.POST.get('message')
+            content = request.POST.get('content')
             image = request.FILES.get('image')
             file = request.FILES.get('file')
 

@@ -1,0 +1,72 @@
+/* --- Ümumi Arxa Plan --- */
+.ms-create-wrapper {
+    background-color: #05070A !important;
+    min-height: 100vh;
+    padding-top: 110px; /* Navbar üçün boşluq */
+}
+
+.ms-card {
+    background-color: #0D1117 !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.ms-card-header {
+    background: linear-gradient(135deg, #0D1117 0%, #161B22 100%);
+    border-bottom: 1px solid rgba(0, 132, 255, 0.1);
+}
+
+/* --- Form Elementləri --- */
+.ms-form-control {
+    background-color: #161B22 !important;
+    border: 1px solid #30363D !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+}
+
+.ms-form-control:focus {
+    border-color: #0084FF !important;
+    box-shadow: 0 0 10px rgba(0, 132, 255, 0.15) !important;
+    background-color: #1c2128 !important;
+}
+
+.ms-form-control::placeholder {
+    color: #6B7280 !important;
+}
+
+/* --- Düymələr --- */
+.ms-btn-primary {
+    background: linear-gradient(90deg, #0084FF 0%, #00D1FF 100%);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.ms-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 209, 255, 0.3);
+    color: black;
+}
+
+/* --- Rənglər --- */
+.ms-text-cyan {
+    color: #00D1FF !important;
+}
+
+.ms-text-muted {
+    color: #9CA3AF !important;
+}
+
+/* File input üçün xüsusi stil */
+input[type="file"]::file-selector-button {
+    background: #21262D;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: #30363D;
+}

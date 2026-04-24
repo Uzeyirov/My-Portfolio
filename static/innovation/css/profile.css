@@ -1,0 +1,52 @@
+/* NAVBAR BOŞLUĞU VƏ ÜMUMİ FON */
+.ms-profile-main-wrapper {
+    padding-top: 100px; /* Navbardan uzaqlaşdırdıq */
+    padding-bottom: 50px;
+    background-color: #05070A !important;
+    min-height: 100vh;
+}
+
+/* GLASS-CARD DİZAYNI */
+.ms-glass-card {
+    background: #0D1117 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* OXUNAN YAZILAR (KONTRAST) */
+.ms-email-highlight { color: #00D1FF !important; font-weight: 500; font-size: 0.9rem; }
+.ms-label-muted { color: #8B949E !important; font-size: 0.85rem; }
+.ms-info-desc { color: #E6EDF3 !important; font-size: 0.95rem; line-height: 1.5; }
+.ms-section-title { color: #0084FF !important; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; display: block; margin-bottom: 5px; }
+
+/* AVATAR */
+.ms-profile-pic { width: 140px; height: 140px; border-radius: 50%; border: 3px solid #0084FF; object-fit: cover; }
+.ms-avatar-text { width: 140px; height: 140px; background: linear-gradient(45deg, #0084FF, #00D1FF); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: white; font-weight: bold; }
+
+/* STATS */
+.ms-stats-box { background: rgba(255, 255, 255, 0.03); border-radius: 16px; }
+
+/* TABS */
+.ms-nav-tabs .nav-link {
+    background: transparent; color: #8B949E !important; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 20px;
+}
+.ms-nav-tabs .nav-link.active {
+    background: #0084FF !important; color: white !important; border-color: #0084FF; box-shadow: 0 0 15px rgba(0,132,255,0.3);
+}
+
+/* LİST ELEMENTLƏRİ */
+.ms-item-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; transition: 0.3s; }
+.ms-item-card:hover { border-color: #0084FF; background: rgba(255, 255, 255, 0.05); }
+.ms-badge-neon { background: rgba(0, 209, 255, 0.1); color: #00D1FF; padding: 6px 12px; border-radius: 50px; }
+
+/* DÜYMƏLƏR */
+.ms-btn-primary { background: #0084FF; border: none; color: white; border-radius: 14px; transition: 0.3s; }
+.ms-btn-primary:hover { background: #0070D9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,132,255,0.4); }
+.ms-circle-btn { background: rgba(255,255,255,0.05); width: 36px; height: 36px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+
+/* MODAL DARK */
+.ms-modal-dark { background: #0D1117; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
+.ms-modal-dark input, .ms-modal-dark textarea {
+    background: #05070A !important; border: 1px solid #30363D !important; color: white !important; border-radius: 10px; padding: 10px; width: 100%;
+}

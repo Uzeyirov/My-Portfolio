@@ -97,3 +97,19 @@ class Solution(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.author.username}"
+    
+
+from django.db import models
+
+class LegalDocument(models.Model):
+    DOCUMENT_TYPES = (
+        ('privacy', 'Məxfillik Siyasəti'),
+        ('terms', 'İstifadə Şərtləri'),
+    )
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True) # privacy və ya terms
+    content = models.TextField() # Bura sənədlərin tam mətni gedəcək
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

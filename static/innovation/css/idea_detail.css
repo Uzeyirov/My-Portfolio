@@ -1,0 +1,126 @@
+/* 1. ÜMUMİ SƏHİFƏ AYARLARI */
+.ms-detail-wrapper {
+    background-color: #05070A !important;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0) !important;
+    background-size: 40px 40px;
+    min-height: 100vh;
+    color: #ffffff !important;
+}
+
+/* 2. NAVİQASİYA (BREADCRUMB) - İŞIQLANDIRILDI */
+.ms-breadcrumb .breadcrumb-item a { 
+    color: rgba(255, 255, 255, 0.7) !important; 
+    text-decoration: none; 
+    
+}
+.ms-breadcrumb .breadcrumb-item.active { 
+    color: #0084FF !important; 
+}
+.breadcrumb-item + .breadcrumb-item::before { 
+    color: rgba(255, 255, 255, 0.4) !important; 
+}
+
+/* 3. ƏSAS İDEYA KARTI */
+.ms-main-card {
+    background: #0D1117 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 28px;
+    overflow: hidden;
+}
+
+.ms-main-img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ms-idea-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #ffffff !important;
+    letter-spacing: -1px;
+}
+
+/* TƏSVİR (DESCRIPTION) - OXUNURLUQ ARTIRILDI */
+.description-body {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.text-info {
+    color: #00D1FF !important;
+    font-weight: bold;
+}
+
+/* 4. AVATARLAR */
+.ms-avatar, .ms-avatar-placeholder {
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.ms-avatar-placeholder {
+    background: linear-gradient(45deg, #0084FF, #00c6ff);
+    display: flex; align-items: center; justify-content: center; color: white !important;
+}
+
+/* 5. CTA BANNER - MAVİ PARILTI */
+.ms-cta-banner {
+    background: linear-gradient(135deg, #0084FF 0%, #0055FF 100%) !important;
+    border-radius: 22px;
+    box-shadow: 0 10px 40px rgba(0, 132, 255, 0.2);
+}
+
+/* 6. HƏLLƏR VƏ ŞƏRHLƏR - OXUNURLUQ FİX */
+.ms-solution-card, .ms-comments-card {
+    background: #0D1117 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px;
+    color: #ffffff !important;
+}
+
+.ms-solution-card p, .ms-comment-item p, .ms-reply-item span {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.text-muted {
+    color: rgba(255, 255, 255, 0.5) !important; /* Tarixlər və s. */
+}
+
+/* 7. SƏSVERMƏ SİDEBAR */
+.ms-vote-card {
+    background: #0D1117 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 28px;
+    position: sticky; top: 100px;
+}
+
+.ms-vote-btn {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 2px solid rgba(0, 132, 255, 0.3) !important;
+    color: white !important;
+    width: 120px; height: 120px;
+    border-radius: 24px;
+    margin: 0 auto;
+}
+
+.ms-vote-btn.active {
+    background: #0084FF !important;
+    box-shadow: 0 0 30px rgba(0, 132, 255, 0.5);
+}
+
+.vote-num { font-size: 2rem; font-weight: 900; }
+
+/* 8. FORMLAR VƏ INPUTLAR */
+.form-control {
+    background: #05070A !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.ms-comment-avatar { width: 40px; height: 40px; border-radius: 10px; }

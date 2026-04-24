@@ -16,4 +16,5 @@ urlpatterns = [
     # teams/urls.py
     path('leave-team/<int:team_id>/', views.leave_team, name='leave_team'),
     path('remove-member/<int:team_id>/<int:user_id>/', views.remove_member, name='remove_member'),
+    
 ]

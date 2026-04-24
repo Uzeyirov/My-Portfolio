@@ -1,0 +1,135 @@
+/* --- Ümumi Arxa Plan --- */
+.ms-teams-wrapper {
+    background-color: #05070A !important;
+    min-height: 100vh;
+    padding-top: 110px;
+    color: #ffffff;
+}
+
+.ms-text-cyan { color: #00D1FF !important; }
+.ms-text-muted { color: #9CA3AF !important; }
+
+/* --- Komanda Kartı --- */
+.ms-team-card {
+    background: #0D1117;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.ms-team-card:hover {
+    transform: translateY(-10px);
+    border-color: #0084FF;
+    box-shadow: 0 10px 30px rgba(0, 132, 255, 0.1);
+}
+
+/* YALNIZ BU HİSSƏ ŞƏKİL DƏSTƏYİ ÜÇÜN MODİFİKASİYA OLUNDU */
+.ms-team-logo-circle {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #0084FF 0%, #00D1FF 100%);
+    color: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    box-shadow: 0 0 15px rgba(0, 209, 255, 0.3);
+    overflow: hidden; /* Şəkil kənara çıxmasın */
+    flex-shrink: 0; /* Ölçüsü sabit qalsın */
+}
+
+.ms-team-logo-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Şəkil dairəni tam doldursun */
+}
+
+.ms-team-logo-circle span {
+    color: #000; /* Şəkil yoxdursa baş hərf sənin orijinal stilində qalsın */
+}
+
+.ms-card-desc {
+    color: #9CA3AF;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* --- Recruitment Box --- */
+.ms-recruitment-box {
+    background: rgba(0, 209, 255, 0.05);
+    border-left: 4px solid #00D1FF;
+    padding: 12px 15px;
+    border-radius: 12px;
+}
+
+.ms-recruitment-label {
+    color: #00D1FF;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* --- Düymələr & Badge --- */
+.ms-btn-neon {
+    border: 2px solid #00D1FF;
+    color: #00D1FF;
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.ms-btn-neon:hover {
+    background: #00D1FF;
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 209, 255, 0.4);
+}
+
+.ms-btn-primary {
+    background: #0084FF;
+    color: white;
+    border: none;
+}
+
+.ms-btn-primary:hover {
+    background: #00D1FF;
+    color: #000;
+}
+
+.ms-btn-cyan {
+    background: rgba(0, 209, 255, 0.1);
+    color: #00D1FF;
+    border: 1px solid #00D1FF;
+}
+
+.ms-btn-outline {
+    border: 1px solid #30363D;
+    color: #9CA3AF;
+}
+
+.ms-badge-dark { background: #30363D; color: white; }
+.ms-badge-success { background: rgba(40, 167, 69, 0.1); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.2); }
+
+/* --- Modal --- */
+.ms-modal-content {
+    background: #0D1117;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.ms-form-control {
+    background: #161B22 !important;
+    border: 1px solid #30363D !important;
+    color: white !important;
+}
+
+.ms-empty-box {
+    background: #0D1117;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+}

@@ -1,0 +1,23 @@
+/* Siyahı səhifəsinə özəl kart dizaynı */
+.challenge-grid-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 25px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.challenge-grid-card:hover {
+    transform: scale(1.02);
+    border-color: #00d2ff;
+    box-shadow: 0 15px 30px rgba(0, 210, 255, 0.15);
+}
+
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}

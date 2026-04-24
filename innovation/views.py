@@ -259,3 +259,30 @@ def delete_solution(request, pk):
     if solution.author == request.user:
         solution.delete()
     return redirect('idea_detail', pk=idea_pk)
+
+
+def resources_view(request):
+    return render(request, 'innovation/resources.html')
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Count
+from .models import Idea # Modelin adının 'Idea' olduğundan əmin ol
+
+def leaderboard_view(request):
+    # İdeyaları səslərin sayına görə çoxdan aza doğru sıralayırıq (Top 10)
+    top_ideas = Idea.objects.annotate(
+        votes_count=Count('votes')
+    ).order_by('-votes_count')[:10]
+    
+    return render(request, 'innovation/leaderboard.html', {'top_ideas': top_ideas})
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import LegalDocument
+
+def legal_detail(request, slug):
+    doc = get_object_or_404(LegalDocument, slug=slug)
+    return render(request, 'innovation/legal_detail.html', {'doc': doc})

@@ -1,0 +1,134 @@
+/* --- Ümumi Arxa Plan və Kartlar --- */
+.ms-detail-page-wrapper {
+    background-color: #05070A !important;
+    min-height: 100vh;
+    padding-top: 65px; /* BAX BU SƏTİR ÇATIŞMIRDI - Navbar üçün boşluq */
+    padding-bottom: 50px;
+}
+
+
+.ms-card {
+    background-color: #0D1117 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* --- Şəkil Qutusu (Bura ən vacib yerdir) --- */
+.ms-image-container {
+    width: 100%;
+    height: 400px; /* Hündürlük konkret verildi */
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ms-img-fixed {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto !important; /* w-100 bəlasını əzir */
+    height: auto !important;
+    object-fit: contain; /* Şəkil çərçivəyə sığdırılır, kəsilmir */
+}
+
+/* --- Mətn Rəngləri və Kontrast --- */
+.ms-description-text {
+    color: #E5E7EB; /* Parlaq gümüşü, oxunması asan */
+    font-size: 1.1rem;
+    line-height: 1.9;
+}
+
+.ms-text-muted {
+    color: #9CA3AF !important; /* Köhnə sönük bozdan daha canlı boz */
+}
+
+.ms-text-cyan {
+    color: #00D1FF !important;
+}
+
+/* --- Badges & Buttons --- */
+.ms-badge-cyan {
+    background-color: rgba(0, 209, 255, 0.1);
+    color: #00D1FF;
+    border: 1px solid rgba(0, 209, 255, 0.25);
+}
+
+.ms-btn-primary {
+    background: #0084FF;
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.ms-btn-primary:hover {
+    background: #00D1FF;
+    color: black;
+}
+
+.ms-btn-outline-cyan {
+    background: transparent;
+    color: #00D1FF;
+    border: 1px solid #00D1FF;
+    transition: all 0.3s ease;
+}
+
+.ms-btn-outline-cyan:hover {
+    background: #00D1FF;
+    color: black;
+}
+
+.ms-btn-dark {
+    background: #161B22;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.ms-btn-dark:hover {
+    background: #21262D;
+    color: white !important;
+}
+
+/* --- Səsvermə Düyməsi --- */
+.ms-vote-btn {
+    background: #161B22;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #E5E7EB;
+    min-width: 80px;
+    transition: all 0.3s ease;
+}
+
+.ms-vote-btn:hover {
+    border-color: rgba(0, 209, 255, 0.5);
+    color: white;
+}
+
+.ms-vote-btn.active {
+    background: rgba(0, 209, 255, 0.15);
+    border-color: #00D1FF;
+    color: #00D1FF;
+    box-shadow: 0 0 15px rgba(0, 209, 255, 0.2);
+}
+
+/* --- Formlar (Input / Textarea) --- */
+.ms-form-control {
+    background-color: #161B22 !important;
+    border: 1px solid #30363D !important;
+    color: #ffffff !important;
+}
+
+.ms-form-control:focus {
+    border-color: #0084FF !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 132, 255, 0.25) !important;
+}
+
+.ms-form-control::placeholder {
+    color: #6B7280 !important;
+}
+
+/* --- Avatarlar --- */
+.ms-avatar-lg { width: 90px; height: 90px; object-fit: cover; border: 3px solid #0D1117; outline: 2px solid #00D1FF; }
+.ms-avatar-md { width: 50px; height: 50px; object-fit: cover; }
+.ms-avatar-sm { width: 35px; height: 35px; object-fit: cover; }
+
+.ms-avatar-placeholder-lg { width: 90px; height: 90px; background: #0084FF; color: white; font-size: 2rem; border: 3px solid #0D1117; outline: 2px solid #00D1FF; }
+.ms-avatar-placeholder-md { width: 50px; height: 50px; background: rgba(0, 132, 255, 0.2); color: #00D1FF; font-size: 1.2rem; }
+.ms-avatar-placeholder-sm { width: 35px; height: 35px; background: rgba(255, 255, 255, 0.1); color: white; font-size: 1rem; }

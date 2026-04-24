@@ -1,0 +1,113 @@
+/* Ümumi Səhifə */
+.delete-page-wrapper {
+    min-height: 100vh;
+    background-color: #080B12;
+    padding: 140px 0 80px;
+    position: relative;
+    color: #FFFFFF;
+}
+
+.form-grid-pattern {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 1;
+}
+
+.delete-container-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 600px; /* Daha dar və fokuslanmış */
+    margin: 0 auto;
+}
+
+/* Glassmorphism Kart */
+.glass-delete-card {
+    background: rgba(17, 24, 39, 0.9);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 87, 87, 0.2); /* Qırmızımtıl sərhəd */
+    border-radius: 35px;
+    padding: 60px 40px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.delete-header h2 {
+    font-weight: 800;
+    font-size: 2.2rem;
+}
+
+.delete-header span {
+    color: #FF5757; /* Silmə rəngi */
+    text-shadow: 0 0 20px rgba(255, 87, 87, 0.3);
+}
+
+/* İkon Animasiyası */
+.pulse-red {
+    color: #FF5757;
+    filter: drop-shadow(0 0 15px rgba(255, 87, 87, 0.4));
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* İdeya Adı Qutusu */
+.idea-name-box {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 25px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.text-muted-custom {
+    color: #CBD5E1 !important;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+}
+
+.warning-text {
+    color: #94A3B8;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.warning-text strong {
+    color: #FF5757;
+}
+
+/* Silmə Düyməsi */
+.btn-delete-glow {
+    background: linear-gradient(135deg, #FF5757 0%, #C0392B 100%);
+    color: white;
+    border: none;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 25px rgba(255, 87, 87, 0.2);
+}
+
+.btn-delete-glow:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(255, 87, 87, 0.4);
+    color: white;
+}
+
+/* Ləğv Et Düyməsi */
+.btn-cancel-delete {
+    color: #CBD5E1;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 1rem;
+}
+
+.btn-cancel-delete:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}

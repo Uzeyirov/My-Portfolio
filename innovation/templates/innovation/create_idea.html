@@ -1,101 +1,111 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}{% if form.instance.pk %}İdeyanı Redaktə Et{% else %}Yeni İdeya Paylaş{% endif %} | MassSolve{% endblock %}
+{% block title %}
+    {% if form.instance.pk %}İdeyanı Redaktə Et{% else %}Yeni İdeya Paylaş{% endif %} | MassSolve
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'innovation/css/create_idea.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow-lg border-0" style="border-radius: 20px;">
-            <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
-                <h2 class="fw-bold text-primary">
+<div class="form-page-wrapper">
+    <div class="form-grid-pattern"></div>
+    
+    <div class="container form-container-inner">
+        <div class="glass-form-card">
+            
+            <div class="form-header text-center mb-5">
+                <h2>
                     {% if form.instance.pk %}
-                        <i class="fa-solid fa-pen-to-square me-2"></i>İdeyanı Redaktə Et
+                        İdeyanı <span>Redaktə Et</span>
                     {% else %}
-                        <i class="fa-solid fa-rocket me-2"></i>Dünyanı Dəyişəcək İdeyanı Paylaş
+                        Dünyanı <span>Dəyiş</span>
                     {% endif %}
                 </h2>
-                <p class="text-muted small">
-                    {% if form.instance.pk %}Məlumatları yeniləyərək ideyanı təkmilləşdir.{% else %}Mühəndislər və istehsalçılar səni gözləyir!{% endif %}
+                <p class="text-muted-custom">
+                    {% if form.instance.pk %}
+                        Məlumatları yeniləyərək ideyanı təkmilləşdir.
+                    {% else %}
+                        Mühəndislər və istehsalçılar səni gözləyir!
+                    {% endif %}
                 </p>
             </div>
-            
-            <div class="card-body p-4">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
+
+            <form method="post" enctype="multipart/form-data" id="ideaForm">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label class="form-label">İdeyanın Adı</label>
+                    <input type="text" name="title" class="form-control" 
+                           placeholder="Məs: Ağıllı Suvarma Sistemi" 
+                           value="{{ form.instance.title|default:'' }}" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Kateqoriya</label>
+                    <select name="category" class="form-select custom-select" required>
+                        <option value="" disabled {% if not form.instance.category %}selected{% endif %}>Bir sahə seçin...</option>
+                        {% for choice in form.category.field.queryset %}
+                            <option value="{{ choice.pk }}" {% if form.instance.category.pk == choice.pk %}selected{% endif %}>
+                                {{ choice.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">İdeyanın Təsviri</label>
+                    <textarea name="description" class="form-control" rows="5" 
+                              placeholder="Bu ideya nəyi həll edir? Necə işləyir?" required>{{ form.instance.description|default:'' }}</textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label"><i class="fa-regular fa-image me-2 text-primary"></i>Şəkil və ya 3D Render</label>
                     
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">İdeyanın Adı</label>
-                        <input type="text" name="title" class="form-control form-control-lg bg-light border-0" 
-                               placeholder="Məs: Ağıllı Suvarma Sistemi" 
-                               value="{{ form.instance.title|default:'' }}" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">Kateqoriya</label>
-                        <select name="category" class="form-select form-control-lg bg-light border-0" required>
-                            <option value="" disabled {% if not form.instance.category %}selected{% endif %}>Bir sahə seçin...</option>
-                            {% for choice in form.category.field.queryset %}
-                                <option value="{{ choice.pk }}" {% if form.instance.category.pk == choice.pk %}selected{% endif %}>
-                                    {{ choice.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">İdeyanın Təsviri</label>
-                        <textarea name="description" class="form-control bg-light border-0" rows="5" 
-                                  placeholder="Bu ideya nəyi həll edir? Necə işləyir?" required>{{ form.instance.description|default:'' }}</textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">Şəkil və ya 3D Render</label>
-                        {% if form.instance.image %}
-                            <div class="mb-2">
-                                <small class="text-muted d-block mb-1">Cari şəkil:</small>
-                                <img src="{{ form.instance.image.url }}" class="img-thumbnail" style="height: 100px;">
-                            </div>
-                        {% endif %}
-                        <div class="input-group">
-                            <input type="file" name="image" class="form-control bg-light border-0" id="inputGroupFile02">
+                    {% if form.instance.image %}
+                        <div class="current-img-preview mb-3">
+                            <small class="text-white-50 d-block mb-2">Cari şəkil:</small>
+                            <img src="{{ form.instance.image.url }}" class="img-preview-box">
                         </div>
-                    </div>
+                    {% endif %}
+                    
+                    <input type="file" name="image" class="form-control custom-file-input">
+                </div>
 
-                    {% if user.is_manufacturer %}
-                    <div class="mb-4 p-3 border rounded bg-light d-flex justify-content-between align-items-center">
+                {% if user.is_manufacturer %}
+                <div class="official-product-wrapper mb-5">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-0 fw-bold">Rəsmi İstehsal Məhsuludur?</h6>
-                            <small class="text-muted">Bu sizin zavod/fabrikin hazır məhsuludursa aktiv edin.</small>
+                            <h6 class="mb-0 text-white fw-bold">Rəsmi İstehsal Məhsuludur?</h6>
+                            <small class="text-white-50">Bu sizin zavodun hazır məhsuludursa aktiv edin.</small>
                         </div>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="is_official_product" 
-                                   style="width: 40px; height: 20px;" {% if form.instance.is_official_product %}checked{% endif %}>
+                            <input class="form-check-input custom-switch" type="checkbox" name="is_official_product" 
+                                   {% if form.instance.is_official_product %}checked{% endif %}>
                         </div>
                     </div>
-                    {% endif %}
+                </div>
+                {% endif %}
 
-                    <div class="d-grid gap-2 mt-5">
-                        <button type="submit" class="btn btn-primary btn-lg shadow-sm py-3" style="border-radius: 15px; font-weight: 700;">
-                            {% if form.instance.pk %}
-                                <i class="fa-solid fa-floppy-disk me-2"></i>Dəyişiklikləri Yadda Saxla
-                            {% else %}
-                                <i class="fa-solid fa-share-nodes me-2"></i>Platformada Yayımla
-                            {% endif %}
-                        </button>
-                        <a href="{% url 'home' %}" class="btn btn-link text-decoration-none text-muted">Ləğv et və qayıt</a>
-                    </div>
-                </form>
-            </div>
+                <div class="d-grid gap-3 mt-5">
+                    <button type="submit" class="btn btn-submit-glow py-3">
+                        {% if form.instance.pk %}
+                            <i class="fa-solid fa-floppy-disk me-2"></i>Dəyişiklikləri Yadda Saxla
+                        {% else %}
+                            <i class="fa-solid fa-share-nodes me-2"></i>Platformada Yayımla
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'home' %}" class="btn-cancel text-center mt-2">Ləğv et və qayıt</a>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>
+{% endblock %}
 
-<style>
-    .form-control:focus, .form-select:focus {
-        background-color: #fff !important;
-        border: 1px solid #0d6efd !important;
-        box-shadow: none;
-    }
-    textarea { resize: none; }
-</style>
+{% block extra_js %}
+    <script src="{% static 'innovation/js/create_idea.js' %}"></script>
 {% endblock %}

@@ -22,6 +22,11 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('innovation.urls')), # Boş yol ana səhifəyə (innovation.home) gedir
+
+
+    path('challenges/', include('challenges.urls')),
+
+    
     path('users/', include('users.urls')),
 
     path('solutions/', include('solutions.urls')),
@@ -29,4 +34,6 @@ urlpatterns = [
     # core/urls.py
     path('teams/', include('teams.urls')),
     
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

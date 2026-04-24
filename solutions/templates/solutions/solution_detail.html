@@ -1,158 +1,177 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ solution.title }} | MassSolve{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'solutions/css/solution_detail.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-    <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-white">
-                {% if solution.image %}
-                    <img src="{{ solution.image.url }}" class="w-100" style="max-height: 450px; object-fit: cover;">
-                {% endif %}
-                <div class="card-body p-4 p-md-5">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div>
-                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 mb-2 small border border-success border-opacity-25">
-                                {{ solution.target_area }}
-                            </span>
-                            <h1 class="fw-bold text-dark display-6">{{ solution.title }}</h1>
+<div class="ms-detail-page-wrapper">
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="ms-card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+                    {% if solution.image %}
+                        <div class="ms-image-container">
+                            <img src="{{ solution.image.url }}" class="ms-img-fixed" alt="Layihə şəkli">
                         </div>
-                        <div class="text-center">
-                            <form action="{% url 'vote_solution' solution.pk %}" method="POST">
-                                {% csrf_token %}
-                                <button type="submit" class="btn {% if user in solution.votes.all %}btn-success shadow{% else %}btn-outline-success{% endif %} rounded-4 px-3 py-2">
-                                    <i class="fa-solid fa-circle-up fs-4 d-block mb-1"></i>
-                                    <span class="fw-bold">{{ solution.total_votes }} Səs</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <hr class="my-4 opacity-25">
-                    <p class="text-secondary fs-5 lh-lg" style="white-space: pre-line;">{{ solution.description }}</p>
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
-                <h4 class="fw-bold mb-4 text-dark">
-                    <i class="fa-regular fa-comments me-2 text-primary"></i>Müzakirə ({{ solution.comments.count }})
-                </h4>
-                
-                {% if user.is_authenticated %}
-                <form action="{% url 'add_comment' solution.pk %}" method="POST" class="mb-5">
-                    {% csrf_token %}
-                    <div class="form-group mb-3">
-                        <textarea name="comment_text" class="form-control rounded-4 border-light bg-light p-3" 
-                                  rows="3" placeholder="Yeni bir şərh yazın..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">Göndər</button>
-                </form>
-                {% endif %}
-
-                <div class="comment-list">
-                    {% for comment in solution.comments.all %}
-                        {% if not comment.parent %} <div class="d-flex gap-3 mb-4 border-bottom border-light pb-4">
-                            <div class="flex-shrink-0">
-                                <a href="{% url 'profile' comment.user.username %}">
-                                    {% if comment.user.profile.avatar %}
-                                        <img src="{{ comment.user.profile.avatar.url }}" class="rounded-circle shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">
-                                    {% else %}
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 50px; height: 50px;">
-                                            {{ comment.user.username|first|upper }}
-                                        </div>
-                                    {% endif %}
-                                </a>
-                            </div>
+                    {% endif %}
+                    
+                    <div class="card-body p-4 p-md-5 ms-card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-4 gap-3 flex-wrap">
                             <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <h6 class="mb-0"><a href="{% url 'profile' comment.user.username %}" class="text-dark fw-bold text-decoration-none hover-link">@{{ comment.user.username }}</a></h6>
-                                    <small class="text-muted small">{{ comment.created_at|timesince }} əvvəl</small>
-                                </div>
-                                <p class="text-secondary mb-2">{{ comment.text }}</p>
-                                
-                                {% if user.is_authenticated %}
-                                <button class="btn btn-link btn-sm p-0 text-decoration-none fw-bold" onclick="toggleReplyForm('{{ comment.id }}')">Cavab ver</button>
-                                
-                                <div id="reply-form-{{ comment.id }}" class="mt-3 d-none">
-                                    <form action="{% url 'add_comment' solution.pk %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                                        <textarea name="comment_text" class="form-control rounded-3 bg-light mb-2 p-2" rows="2" placeholder="@{{ comment.user.username }} üçün cavab yazın..." required></textarea>
-                                        <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">Göndər</button>
-                                        <button type="button" class="btn btn-link btn-sm text-muted text-decoration-none" onclick="toggleReplyForm('{{ comment.id }}')">Ləğv et</button>
-                                    </form>
-                                </div>
-                                {% endif %}
-
-                                <div class="ms-2 mt-3 border-start ps-3">
-                                    {% for reply in comment.replies.all %}
-                                    <div class="d-flex gap-2 mb-3">
-                                        <div class="flex-shrink-0">
-                                            {% if reply.user.profile.avatar %}
-                                                <img src="{{ reply.user.profile.avatar.url }}" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                            {% else %}
-                                                <div class="bg-light text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold small" style="width: 30px; height: 30px;">
-                                                    {{ reply.user.username|first|upper }}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        <div>
-                                            <small class="fw-bold"><a href="{% url 'profile' reply.user.username %}" class="text-dark text-decoration-none">@{{ reply.user.username }}</a></small>
-                                            <p class="text-muted small mb-0">{{ reply.text }}</p>
-                                            <small class="text-muted" style="font-size: 0.7rem;">{{ reply.created_at|timesince }} əvvəl</small>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
+                                <span class="ms-badge-cyan rounded-pill px-3 py-2 mb-3 d-inline-block small fw-bold">
+                                    {{ solution.target_area }}
+                                </span>
+                                <h1 class="fw-bold text-white display-6 mb-2">{{ solution.title }}</h1>
+                                <div class="ms-text-muted small">
+                                    <i class="fa-regular fa-calendar-check me-1"></i> {{ solution.created_at|date:"d M Y" }}
                                 </div>
                             </div>
+                            
+                            <div class="text-center ms-vote-wrapper">
+                                <form action="{% url 'vote_solution' solution.pk %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="ms-vote-btn {% if user in solution.votes.all %}active{% endif %} rounded-4 px-3 py-2 d-flex flex-column align-items-center justify-content-center">
+                                        <i class="fa-solid fa-circle-up fs-3 mb-1"></i>
+                                        <span class="fw-bold fs-5 lh-1">{{ solution.total_votes }}</span>
+                                        <small class="fw-bold mt-1" style="font-size: 0.7rem; letter-spacing: 1px;">SƏS</small>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                        {% endif %}
-                    {% endfor %}
+                        
+                        <hr class="my-4 border-secondary opacity-25">
+                        
+                        <div class="ms-description-text">
+                            <p style="white-space: pre-line;">{{ solution.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ms-card border-0 shadow-lg rounded-4 p-4 p-md-5">
+                    <h4 class="fw-bold mb-4 text-white">
+                        <i class="fa-regular fa-comments me-2 ms-text-cyan"></i>Müzakirə ({{ solution.comments.count }})
+                    </h4>
+                    
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'add_comment' solution.pk %}" method="POST" class="mb-5">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <textarea name="comment_text" class="ms-form-control form-control rounded-4 p-3" 
+                                      rows="3" placeholder="Yeni bir şərh yazın..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn ms-btn-primary rounded-pill px-5 fw-bold shadow-sm">Göndər</button>
+                    </form>
+                    {% endif %}
+
+                    <div class="comment-list">
+                        {% for comment in solution.comments.all %}
+                            {% if not comment.parent %} 
+                            <div class="d-flex gap-3 mb-4 border-bottom border-secondary border-opacity-25 pb-4">
+                                <div class="flex-shrink-0">
+                                    <a href="{% url 'profile' comment.user.username %}">
+                                        {% if comment.user.profile.avatar %}
+                                            <img src="{{ comment.user.profile.avatar.url }}" class="rounded-circle shadow-sm ms-avatar-md">
+                                        {% else %}
+                                            <div class="ms-avatar-placeholder-md rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm">
+                                                {{ comment.user.username|first|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <h6 class="mb-0"><a href="{% url 'profile' comment.user.username %}" class="ms-text-cyan fw-bold text-decoration-none hover-link">@{{ comment.user.username }}</a></h6>
+                                        <small class="ms-text-muted small">{{ comment.created_at|timesince }} əvvəl</small>
+                                    </div>
+                                    <p class="text-light mb-2 opacity-75">{{ comment.text }}</p>
+                                    
+                                    {% if user.is_authenticated %}
+                                    <button class="btn btn-link btn-sm p-0 text-decoration-none fw-bold ms-text-cyan" onclick="toggleReplyForm('{{ comment.id }}')">Cavab ver</button>
+                                    
+                                    <div id="reply-form-{{ comment.id }}" class="mt-3 d-none">
+                                        <form action="{% url 'add_comment' solution.pk %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                            <textarea name="comment_text" class="ms-form-control form-control rounded-3 mb-2 p-2" rows="2" placeholder="@{{ comment.user.username }} üçün cavab yazın..." required></textarea>
+                                            <button type="submit" class="btn ms-btn-primary btn-sm rounded-pill px-3">Göndər</button>
+                                            <button type="button" class="btn btn-link btn-sm ms-text-muted text-decoration-none" onclick="toggleReplyForm('{{ comment.id }}')">Ləğv et</button>
+                                        </form>
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="ms-2 mt-3 border-start border-secondary border-opacity-50 ps-3">
+                                        {% for reply in comment.replies.all %}
+                                        <div class="d-flex gap-2 mb-3">
+                                            <div class="flex-shrink-0">
+                                                {% if reply.user.profile.avatar %}
+                                                    <img src="{{ reply.user.profile.avatar.url }}" class="rounded-circle ms-avatar-sm">
+                                                {% else %}
+                                                    <div class="ms-avatar-placeholder-sm rounded-circle d-flex align-items-center justify-content-center fw-bold small">
+                                                        {{ reply.user.username|first|upper }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <small class="fw-bold"><a href="{% url 'profile' reply.user.username %}" class="text-white text-decoration-none">@{{ reply.user.username }}</a></small>
+                                                <p class="text-light small mb-0 opacity-75">{{ reply.text }}</p>
+                                                <small class="ms-text-muted" style="font-size: 0.7rem;">{{ reply.created_at|timesince }} əvvəl</small>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-4">
-            <div class="sticky-top" style="top: 100px;">
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white text-center">
-                    <h6 class="text-uppercase text-muted fw-bold small mb-3 text-start">Layihə Müəllifi</h6>
-                    <div class="mb-3">
-                        <a href="{% url 'profile' solution.author.username %}" class="text-decoration-none d-inline-block">
-                            {% if solution.author.profile.avatar %}
-                                <img src="{{ solution.author.profile.avatar.url }}" class="rounded-circle shadow mb-2" style="width: 80px; height: 80px; object-fit: cover;">
-                            {% else %}
-                                <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow mb-2 mx-auto" style="width: 80px; height: 80px;">
-                                    {{ solution.author.username|first|upper }}
-                                </div>
-                            {% endif %}
-                        </a>
-                        <h5 class="mb-0 fw-bold"><a href="{% url 'profile' solution.author.username %}" class="text-dark text-decoration-none hover-link">@{{ solution.author.username }}</a></h5>
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: 100px;">
+                    <div class="ms-card border-0 shadow-lg rounded-4 p-4 mb-3 text-center">
+                        <h6 class="text-uppercase ms-text-muted fw-bold small mb-4 text-start" style="letter-spacing: 1px;">Layihə Müəllifi</h6>
+                        <div class="mb-4">
+                            <a href="{% url 'profile' solution.author.username %}" class="text-decoration-none d-inline-block">
+                                {% if solution.author.profile.avatar %}
+                                    <img src="{{ solution.author.profile.avatar.url }}" class="rounded-circle shadow mb-2 ms-avatar-lg">
+                                {% else %}
+                                    <div class="ms-avatar-placeholder-lg rounded-circle d-flex align-items-center justify-content-center fw-bold shadow mb-2 mx-auto">
+                                        {{ solution.author.username|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </a>
+                            <h5 class="mb-0 fw-bold"><a href="{% url 'profile' solution.author.username %}" class="text-white text-decoration-none hover-link">@{{ solution.author.username }}</a></h5>
+                        </div>
+                        
+                        {% if solution.technical_file %}
+                            <a href="{{ solution.technical_file.url }}" class="btn ms-btn-outline-cyan w-100 rounded-pill py-3 mb-3 fw-bold" download>
+                                <i class="fa-solid fa-file-pdf me-2"></i> PDF Endir
+                            </a>
+                        {% endif %}
+                        
+                        {% if user == solution.author %}
+                            <form action="{% url 'delete_solution' solution.pk %}" method="POST" onsubmit="return confirm('Silmək istəyirsiniz?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger w-100 rounded-pill py-2 small fw-bold">Layihəni Sil</button>
+                            </form>
+                        {% endif %}
                     </div>
-                    {% if solution.technical_file %}
-                        <a href="{{ solution.technical_file.url }}" class="btn btn-dark w-100 rounded-pill py-3 mb-3 fw-bold" download>PDF Endir</a>
-                    {% endif %}
-                    {% if user == solution.author %}
-                        <form action="{% url 'delete_solution' solution.pk %}" method="POST" onsubmit="return confirm('Silmək istəyirsiniz?')">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger w-100 rounded-pill py-2 small">Layihəni Sil</button>
-                        </form>
-                    {% endif %}
+                    
+                    <a href="{% url 'solutions_home' %}" class="btn ms-btn-dark w-100 rounded-pill py-3 ms-text-muted text-decoration-none fw-bold">
+                        <i class="fa-solid fa-arrow-left me-2"></i> Vitrinə qayıt
+                    </a>
                 </div>
-                <a href="{% url 'solutions_home' %}" class="btn btn-light w-100 rounded-pill py-2 text-muted text-decoration-none">← Vitrinə qayıt</a>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
 
-<script>
-function toggleReplyForm(id) {
-    const form = document.getElementById('reply-form-' + id);
-    form.classList.toggle('d-none');
-}
-</script>
-
-<style>
-    .hover-link:hover { color: #0d6efd !important; text-decoration: underline !important; }
-    .border-start { border-width: 3px !important; border-color: #f0f0f0 !important; }
-</style>
+{% block extra_js %}
+    <script src="{% static 'solutions/js/solution_detail.js' %}"></script>
 {% endblock %}

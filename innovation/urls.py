@@ -20,4 +20,11 @@ urlpatterns = [
 
 
     path('solution/<int:pk>/delete/', views.delete_solution, name='delete_solution'),
+
+    path('resources/', views.resources_view, name='resources'),
+
+    path('leaderboard/', views.leaderboard_view, name='leaderboard'),
+
+
+    path('legal/<slug:slug>/', views.legal_detail, name='legal_detail'),
 ]

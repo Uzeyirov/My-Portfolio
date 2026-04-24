@@ -1,31 +1,59 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Həll Hazırla | MassSolve{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'innovation/css/add_solution.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="card border-0 shadow-lg p-5 rounded-4">
-        <h2 class="fw-bold mb-4 text-success">"{{ idea.title }}" üçün Həll Hazırla</h2>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label class="form-label fw-bold">Həllin Başlığı</label>
-                <input type="text" name="title" class="form-control" placeholder="Məs: Alternativ enerji bloku" required>
+<div class="form-page-wrapper">
+    <div class="form-grid-pattern"></div>
+    
+    <div class="container form-container-inner">
+        <div class="glass-form-card">
+            
+            <div class="form-header text-center mb-5">
+                <h2>Həll <span>Hazırla</span></h2>
+                <p class="text-muted-custom">Texniki bacarıqlarını göstər və problemi həll et</p>
             </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Texniki İzah</label>
-                <textarea name="description" class="form-control" rows="5" required></textarea>
+
+            <div class="idea-ref-box">
+                <p>Hazırda bu ideya üzərində işləyirsiniz:</p>
+                <h4>"{{ idea.title }}"</h4>
             </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Şəkil (Render)</label>
-                    <input type="file" name="image" class="form-control">
+
+            <form method="POST" enctype="multipart/form-data" id="solutionForm">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label class="form-label">Həllin Başlığı</label>
+                    <input type="text" name="title" class="form-control" placeholder="Məs: Alternativ enerji bloku v1.0" required>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Layihə Faylı (PDF)</label>
-                    <input type="file" name="file" class="form-control">
+
+                <div class="mb-4">
+                    <label class="form-label">Texniki İzah</label>
+                    <textarea name="description" class="form-control" rows="6" placeholder="Bu həll problemi necə aradan qaldıracaq? Texniki detalları qeyd edin..." required></textarea>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill mt-3">Həlli Paylaş</button>
-        </form>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label text-white-50"><i class="fa-regular fa-image me-2 text-primary"></i>Şəkil (Render)</label>
+                        <input type="file" name="image" class="form-control custom-file-input">
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label text-white-50"><i class="fa-regular fa-file-pdf me-2 text-primary"></i>Layihə Faylı (PDF)</label>
+                        <input type="file" name="file" class="form-control custom-file-input">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-submit-glow w-100 mt-4">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Həlli Paylaş
+                </button>
+            </form>
+
+        </div>
     </div>
 </div>
 {% endblock %}

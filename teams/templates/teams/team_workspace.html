@@ -1,237 +1,146 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'teams/css/team_workspace.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
-                {% if team.image %}
-                    <img src="{{ team.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                {% endif %}
-                <div class="card-body p-4 text-center">
-                    <h3 class="fw-bold">{{ team.name }}</h3>
-                    <p class="text-muted small">{{ team.description }}</p>
-                    <hr>
-                    <div class="d-grid gap-2">
-                        <span class="badge bg-primary p-2 rounded-pill">Status: Aktiv</span>
-                        
-                        {% if user != team.leader and user in team.members.all %}
-                        <a href="{% url 'leave_team' team.id %}" class="btn btn-outline-danger btn-sm rounded-pill mt-2" 
-                           onclick="return confirm('Komandadan çıxmaq istədiyinizə əminsiniz?')">
-                            <i class="fa-solid fa-right-from-bracket me-1"></i> Komandadan Çıx
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            {% if user == team.leader %}
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-primary bg-opacity-10">
-                <h6 class="fw-bold mb-3"><i class="fa-solid fa-user-plus me-2"></i>Gələn Müraciətlər</h6>
-                <div class="d-flex flex-column gap-3">
-                    {% for req in team.join_requests.all %}
-                        {% if req.status == 'pending' %}
-                        <div class="bg-white p-3 rounded-4 shadow-sm">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold small">@{{ req.user.username }}</span>
-                                <a href="{% url 'approve_join_request' req.id %}" class="btn btn-sm btn-success rounded-pill px-3">Təsdiqlə</a>
-                            </div>
-                            <p class="small text-muted mb-0" style="font-size: 0.8rem;">"{{ req.message }}"</p>
-                        </div>
-                        {% endif %}
-                    {% empty %}
-                        <p class="small text-muted mb-0">Yeni müraciət yoxdur.</p>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
-                <h5 class="fw-bold mb-3"><i class="fa-solid fa-users-gear me-2"></i>Komanda Heyəti</h5>
-                <div class="d-flex flex-wrap gap-4">
-                    <div class="text-center position-relative">
-                        <a href="{% url 'profile' team.leader.username %}" class="text-decoration-none text-dark">
-                            <img src="{{ team.leader.profile.avatar.url|default:'/static/img/default.png' }}" class="rounded-circle border border-warning border-3 mb-1" style="width: 60px; height: 60px; object-fit: cover;">
-                            <p class="small mb-0 fw-bold">@{{ team.leader.username }}</p>
-                            <small class="text-muted">(Lider)</small>
-                        </a>
-                    </div>
-                    {% for member in team.members.all %}
-                    {% if member != team.leader %}
-                    <div class="text-center position-relative group">
-                        <a href="{% url 'profile' member.username %}" class="text-decoration-none text-dark">
-                            <img src="{{ member.profile.avatar.url|default:'/static/img/default.png' }}" class="rounded-circle border border-primary mb-1" style="width: 60px; height: 60px; object-fit: cover;">
-                            <p class="small mb-0">@{{ member.username }}</p>
-                        </a>
-                        {% if user == team.leader %}
-                        <a href="{% url 'remove_member' team.id member.id %}" class="badge bg-danger rounded-circle position-absolute top-0 end-0 text-decoration-none" 
-                           onclick="return confirm('Bu üzvü kənarlaşdırmaq istədiyinizə əminsiniz?')"
-                           style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; border: 2px solid white;">
-                            <i class="fa-solid fa-xmark" style="font-size: 10px;"></i>
-                        </a>
-                        {% endif %}
-                    </div>
+<div class="ms-main-wrapper">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 bg-dark text-white">
+                    {% if team.image %}
+                        <img src="{{ team.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
                     {% endif %}
-                    {% endfor %}
+                    <div class="card-body p-4 text-center">
+                        <h3 class="fw-bold">{{ team.name }}</h3>
+                        <p class="text-muted small">{{ team.description }}</p>
+                        <hr class="border-secondary">
+                        <div class="d-grid gap-2">
+                            <span class="badge bg-primary p-2 rounded-pill">Status: Aktiv</span>
+                            {% if user != team.leader and user in team.members.all %}
+                            <a href="{% url 'leave_team' team.id %}" class="btn btn-outline-danger btn-sm rounded-pill mt-2" onclick="return confirm('Komandadan çıxmaq istədiyinizə əminsiniz?')">
+                                <i class="fa-solid fa-right-from-bracket me-1"></i> Komandadan Çıx
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
+
+                {% if user == team.leader %}
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                    <h6 class="fw-bold mb-3 text-white"><i class="fa-solid fa-user-plus me-2"></i>Gələn Müraciətlər</h6>
+                    <div class="d-flex flex-column gap-3">
+                        {% for req in team.join_requests.all %}
+                            {% if req.status == 'pending' %}
+                            <div class="bg-dark p-3 rounded-4 shadow-sm border border-secondary">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold small text-info">@{{ req.user.username }}</span>
+                                    <a href="{% url 'approve_join_request' req.id %}" class="btn btn-sm btn-success rounded-pill px-3">Təsdiqlə</a>
+                                </div>
+                                <p class="small text-muted mb-0" style="font-size: 0.8rem;">"{{ req.message }}"</p>
+                            </div>
+                            {% endif %}
+                        {% empty %}
+                            <p class="small text-muted mb-0 text-center">Yeni müraciət yoxdur.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
             </div>
 
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-                <div class="card-header bg-white py-3">
-                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-comments text-primary me-2"></i>Komanda Müzakirələri</h5>
-                </div>
-                
-                <div id="chat-log" class="p-4 bg-light" style="height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
-                    {% regroup chat_messages by timestamp.date as daily_messages %}
-                    
-                    {% for day in daily_messages %}
-                        <div class="text-center my-3">
-                            <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-1 small fw-normal">
-                                {% if day.grouper == today %} Bugün {% elif day.grouper == yesterday %} Dünən {% else %} {{ day.grouper|date:"d F Y" }} {% endif %}
-                            </span>
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-dark text-white">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-users-gear me-2 text-info"></i>Komanda Heyəti</h5>
+                    <div class="d-flex flex-wrap gap-4">
+                        <div class="text-center position-relative">
+                            <a href="{% url 'profile' team.leader.username %}" class="text-decoration-none text-white">
+                                <img src="{{ team.leader.profile.avatar.url|default:'/static/img/default.png' }}" class="rounded-circle border border-warning border-3 mb-1 shadow-sm" style="width: 60px; height: 60px; object-fit: cover;">
+                                <p class="small mb-0 fw-bold">@{{ team.leader.username }}</p>
+                                <small class="text-muted" style="font-size: 0.7rem;">(Lider)</small>
+                            </a>
                         </div>
+                        {% for member in team.members.all %}
+                            {% if member != team.leader %}
+                            <div class="text-center position-relative group">
+                                <a href="{% url 'profile' member.username %}" class="text-decoration-none text-white">
+                                    <img src="{{ member.profile.avatar.url|default:'/static/img/default.png' }}" class="rounded-circle border border-primary mb-1 shadow-sm" style="width: 60px; height: 60px; object-fit: cover;">
+                                    <p class="small mb-0">@{{ member.username }}</p>
+                                </a>
+                                {% if user == team.leader %}
+                                <a href="{% url 'remove_member' team.id member.id %}" class="badge bg-danger rounded-circle position-absolute top-0 end-0 text-decoration-none shadow-sm" onclick="return confirm('Bu üzvü kənarlaşdırmaq istədiyinizə əminsiniz?')" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid #000;">
+                                    <i class="fa-solid fa-xmark" style="font-size: 10px;"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
 
-                        {% for msg in day.list %}
-                            <div class="{% if msg.user == request.user %}align-self-end{% else %}align-self-start{% endif %}" style="max-width: 80%;">
-                                <a href="{% url 'profile' msg.user.username %}" class="text-decoration-none small text-muted d-block mb-1 px-2 {% if msg.user == request.user %}text-end{% endif %}">@{{ msg.user.username }}</a>
-                                
-                                <div class="d-flex align-items-end gap-2 {% if msg.user == request.user %}flex-row-reverse{% endif %}">
-                                    <div class="p-2 px-3 rounded-4 shadow-sm {% if msg.user == request.user %}bg-primary text-white{% else %}bg-white text-dark{% endif %}" style="word-break: break-word;">
-                                        <div class="message-content">
-                                            {% if msg.content %}{{ msg.content }}{% endif %}
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-dark text-white">
+                    <div class="card-header bg-transparent py-3 border-bottom border-secondary">
+                        <h5 class="fw-bold mb-0 text-info"><i class="fa-solid fa-comments me-2"></i>Komanda Müzakirələri</h5>
+                    </div>
+                    
+                    <div id="chat-log" class="p-4">
+                        {% regroup chat_messages by timestamp.date as daily_messages %}
+                        {% for day in daily_messages %}
+                            <div class="text-center my-3">
+                                <span class="badge bg-secondary bg-opacity-10 text-muted rounded-pill px-3 py-1 small fw-normal">
+                                    {% if day.grouper == today %} Bugün {% elif day.grouper == yesterday %} Dünən {% else %} {{ day.grouper|date:"d F Y" }} {% endif %}
+                                </span>
+                            </div>
+                            {% for msg in day.list %}
+                                <div class="message-item {% if msg.user == request.user %}mine{% endif %}">
+                                    <a href="{% url 'profile' msg.user.username %}" class="username">@{{ msg.user.username }}</a>
+                                    <div class="bubble-wrapper">
+                                        <div class="bubble">
+                                            {% if msg.content %}<div class="text">{{ msg.content }}</div>{% endif %}
                                             {% if msg.image %}
-                                                <div class="mt-2 text-center">
-                                                    <a href="{{ msg.image.url }}" target="_blank">
-                                                        <img src="{{ msg.image.url }}" class="rounded-3 img-fluid" style="max-height: 200px; border: 1px solid rgba(0,0,0,0.1);">
-                                                    </a>
-                                                </div>
+                                                <a href="{{ msg.image.url }}" target="_blank"><img src="{{ msg.image.url }}" class="chat-img"></a>
                                             {% endif %}
                                             {% if msg.file %}
-                                                <div class="mt-2">
-                                                    <a href="{{ msg.file.url }}" target="_blank" class="badge {% if msg.user == request.user %}bg-light text-primary{% else %}bg-primary text-white{% endif %} text-decoration-none p-2">
-                                                        <i class="fa-solid fa-file-arrow-down me-1"></i> {{ msg.file.name|slice:"11:" }}
-                                                    </a>
-                                                </div>
+                                                <a href="{{ msg.file.url }}" target="_blank" class="chat-file">
+                                                    <i class="fa-solid fa-file-arrow-down"></i> {{ msg.file.name|slice:"11:" }}
+                                                </a>
                                             {% endif %}
                                         </div>
+                                        <small class="time">{{ msg.timestamp|date:"H:i" }}</small>
                                     </div>
-                                    <small class="text-muted" style="font-size: 0.6rem; min-width: 35px; margin-bottom: 5px;">
-                                        {{ msg.timestamp|date:"H:i" }}
-                                    </small>
                                 </div>
-                            </div>
+                            {% endfor %}
+                        {% empty %}
+                            <p id="no-msg-text" class="text-center text-muted my-auto">Hələ mesaj yoxdur. İlk salamı sən ver!</p>
                         {% endfor %}
-                    {% empty %}
-                        <p id="no-msg-text" class="text-center text-muted my-auto">Hələ mesaj yoxdur. İlk salamı sən ver!</p>
-                    {% endfor %}
-                </div>
+                    </div>
 
-                <div class="card-footer bg-white border-0 p-3">
-                    <form id="chat-form" class="d-flex align-items-center gap-2">
-                        <input type="file" id="image-input" accept="image/*" style="display: none;">
-                        <input type="file" id="file-input" style="display: none;">
-                        
-                        <button type="button" class="btn btn-light rounded-circle text-muted p-0" style="width: 35px; height: 35px;" onclick="document.getElementById('image-input').click()">
-                            <i class="fa-solid fa-image"></i>
-                        </button>
-                        <button type="button" class="btn btn-light rounded-circle text-muted p-0" style="width: 35px; height: 35px;" onclick="document.getElementById('file-input').click()">
-                            <i class="fa-solid fa-paperclip"></i>
-                        </button>
+                    <div class="card-footer bg-transparent border-top border-secondary p-3">
+                        <form id="chat-form" method="POST" action="{% url 'send_message' team.id %}" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+                            {% csrf_token %}
+                            <input type="file" name="image" id="image-input" accept="image/*" style="display: none;">
+                            <input type="file" name="file" id="file-input" style="display: none;">
+                            
+                            <button type="button" class="btn btn-dark rounded-circle" onclick="document.getElementById('image-input').click()"><i class="fa-solid fa-image"></i></button>
+                            <button type="button" class="btn btn-dark rounded-circle" onclick="document.getElementById('file-input').click()"><i class="fa-solid fa-paperclip"></i></button>
 
-                        <input type="text" id="chat-message-input" class="form-control rounded-pill border-0 bg-light px-4" placeholder="Mesajınızı yazın..." autocomplete="off">
-                        
-                        <button type="submit" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; flex-shrink: 0;">
-                            <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                    </form>
-                    <div id="attachment-preview" class="small text-muted mt-2 px-2" style="display: none;">
-                        <i class="fa-solid fa-file-circle-check text-success me-1"></i> <span id="file-name"></span>
+                            <input type="text" id="chat-message-input" name="content" class="form-control rounded-pill bg-dark text-white border-secondary" placeholder="Mesajınızı yazın..." autocomplete="off">
+                            
+                            <button type="submit" class="btn btn-primary rounded-circle"><i class="fa-solid fa-paper-plane"></i></button>
+                        </form>
+                        <div id="attachment-preview" class="small text-info mt-2 px-2" style="display: none;">
+                            <i class="fa-solid fa-file-circle-check text-success me-1"></i> <span id="file-name"></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    const chatForm = document.getElementById('chat-form');
-    const chatInput = document.getElementById('chat-message-input');
-    const chatLog = document.getElementById('chat-log');
-    const noMsgText = document.getElementById('no-msg-text');
-    const imageInput = document.getElementById('image-input');
-    const fileInput = document.getElementById('file-input');
-    const preview = document.getElementById('attachment-preview');
-    const fileName = document.getElementById('file-name');
-
-    chatLog.scrollTop = chatLog.scrollHeight;
-
-    [imageInput, fileInput].forEach(input => {
-        input.addEventListener('change', () => {
-            if (input.files.length > 0) {
-                preview.style.display = 'block';
-                fileName.innerText = input.files[0].name;
-            }
-        });
-    });
-
-    chatForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const message = chatInput.value.trim();
-        const image = imageInput.files[0];
-        const file = fileInput.files[0];
-
-        if (!message && !image && !file) return;
-
-        const formData = new FormData();
-        formData.append('message', message);
-        if (image) formData.append('image', image);
-        if (file) formData.append('file', file);
-
-        fetch("{% url 'send_message' team.id %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                if (noMsgText) noMsgText.remove();
-                
-                const msgDiv = document.createElement('div');
-                msgDiv.className = "align-self-end mb-2";
-                msgDiv.style.maxWidth = "80%";
-                const profileUrl = `/profile/${data.user}/`; 
-                
-                let attachmentHtml = '';
-                if (data.image_url) {
-                    attachmentHtml += `<div class="mt-2 text-center"><a href="${data.image_url}" target="_blank"><img src="${data.image_url}" class="rounded-3 img-fluid" style="max-height: 200px;"></a></div>`;
-                }
-                if (data.file_url) {
-                    attachmentHtml += `<div class="mt-2"><a href="${data.file_url}" target="_blank" class="badge bg-light text-primary text-decoration-none p-2"><i class="fa-solid fa-file-arrow-down me-1"></i> ${data.file_name}</a></div>`;
-                }
-
-                msgDiv.innerHTML = `
-                    <a href="${profileUrl}" class="text-decoration-none small text-muted d-block mb-1 px-2 text-end">@${data.user}</a>
-                    <div class="d-flex align-items-end gap-2 flex-row-reverse">
-                        <div class="p-2 px-3 rounded-4 bg-primary text-white shadow-sm">
-                            <div class="message-content">${data.content || ''}${attachmentHtml}</div>
-                        </div>
-                        <small class="text-muted" style="font-size: 0.6rem; min-width: 35px; margin-bottom: 5px;">${data.timestamp}</small>
-                    </div>
-                `;
-                chatLog.appendChild(msgDiv);
-                chatInput.value = '';
-                imageInput.value = '';
-                fileInput.value = '';
-                preview.style.display = 'none';
-                chatLog.scrollTop = chatLog.scrollHeight;
-            }
-        })
-        .catch(err => console.error("Fetch xətası:", err));
-    });
-</script>
 {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'teams/js/team_workspace.js' %}"></script>
+{% endblock %}  
