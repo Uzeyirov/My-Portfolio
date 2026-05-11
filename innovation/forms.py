@@ -1,15 +1,34 @@
 from django import forms
 from .models import Idea
 
+# forms.py faylında
 class IdeaForm(forms.ModelForm):
+    # Kateqoriyanı seçim yox, mətn sahəsi kimi təyin edirik
+    category = forms.CharField(
+        max_length=100, 
+        required=False, # Məcburi olmasın istəyirsənsə False et
+        label="Kateqoriya"
+    )
+
     class Meta:
         model = Idea
-        # Müəllif (author) və səs (votes) avtomatik olacaq, ona görə onları bura yazmırıq
         fields = ['title', 'category', 'description', 'image', 'is_official_product']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'İdeyanızı ətraflı izah edin...'}),
-        }
 
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        category_name = self.cleaned_data.get('category')
+        
+        if category_name:
+            # Əgər bu adda kateqoriya varsa onu götürür, yoxdursa yenisini yaradır
+            from .models import Category # Model adını özünə görə dəqiqləşdir
+            cat_obj, created = Category.objects.get_or_create(name=category_name)
+            instance.category = cat_obj
+        else:
+            instance.category = None # Məcburi deyilsə boş qala bilər
+            
+        if commit:
+            instance.save()
+        return instance
 from .models import Idea, Comment # Comment-i bura əlavə et
 
 class CommentForm(forms.ModelForm):

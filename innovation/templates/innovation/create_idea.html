@@ -43,16 +43,23 @@
                            value="{{ form.instance.title|default:'' }}" required>
                 </div>
 
+                <!-- DƏYİŞİKLİK BURADADIR: Select əvəzinə Text Input + Datalist -->
                 <div class="mb-4">
-                    <label class="form-label">Kateqoriya</label>
-                    <select name="category" class="form-select custom-select" required>
-                        <option value="" disabled {% if not form.instance.category %}selected{% endif %}>Bir sahə seçin...</option>
+                    <label class="form-label">Kateqoriya (Sahə)</label>
+                    <input type="text" 
+                           name="category" 
+                           id="categoryInput" 
+                           list="categoryOptions" 
+                           class="form-control" 
+                           placeholder="Bir sahə yazın və ya seçin..." 
+                           value="{{ form.instance.category.name|default:'' }}">
+                    
+                    <datalist id="categoryOptions">
                         {% for choice in form.category.field.queryset %}
-                            <option value="{{ choice.pk }}" {% if form.instance.category.pk == choice.pk %}selected{% endif %}>
-                                {{ choice.name }}
-                            </option>
+                            <option value="{{ choice.name }}">
                         {% endfor %}
-                    </select>
+                    </datalist>
+                    <small class="text-white-50 mt-1 d-block">Mövcud olanlardan birini yaza və ya tamamilə yeni sahə əlavə edə bilərsiniz.</small>
                 </div>
 
                 <div class="mb-4">
