@@ -167,4 +167,4 @@ AUTH_USER_MODEL = 'users.User'
 
 
 # settings.py
-ALLOWED_HOSTS = ['my-portfolio-64bs.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['masssolve.onrender.com', 'localhost', '127.0.0.1']
