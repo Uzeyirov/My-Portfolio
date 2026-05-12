@@ -2,29 +2,38 @@ from django import forms
 from .models import Idea
 
 # forms.py faylında
+from django import forms
+from .models import Idea, Category
+
 class IdeaForm(forms.ModelForm):
-    # Kateqoriyanı seçim yox, mətn sahəsi kimi təyin edirik
+    # Kateqoriyanı mətn sahəsi kimi təyin edirik
     category = forms.CharField(
         max_length=100, 
-        required=False, # Məcburi olmasın istəyirsənsə False et
-        label="Kateqoriya"
+        required=False, 
+        label="Kateqoriya",
+        widget=forms.TextInput(attrs={'list': 'categoryOptions', 'class': 'form-control', 'placeholder': 'Sahəni yazın...'})
     )
 
     class Meta:
         model = Idea
         fields = ['title', 'category', 'description', 'image', 'is_official_product']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Əgər mövcud bir ideyanı redaktə ediriksə, input-da kateqoriyanın adını göstərsin
+        if self.instance.pk and self.instance.category:
+            self.initial['category'] = self.instance.category.name
+
     def save(self, commit=True):
         instance = super().save(commit=False)
         category_name = self.cleaned_data.get('category')
         
         if category_name:
-            # Əgər bu adda kateqoriya varsa onu götürür, yoxdursa yenisini yaradır
-            from .models import Category # Model adını özünə görə dəqiqləşdir
+            # Kateqoriya adını bazada axtarır, tapmasa yaradır
             cat_obj, created = Category.objects.get_or_create(name=category_name)
             instance.category = cat_obj
         else:
-            instance.category = None # Məcburi deyilsə boş qala bilər
+            instance.category = None
             
         if commit:
             instance.save()

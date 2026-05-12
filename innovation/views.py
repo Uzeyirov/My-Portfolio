@@ -19,35 +19,24 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Idea, Category  # Category modelini import etdiyindən əmin ol
 from .forms import IdeaForm
 
+@login_required
 def create_idea(request, pk=None):
-    if pk:
-        idea = get_object_or_404(Idea, pk=pk)
-    else:
-        idea = None
-
+    # Əgər pk varsa redaktə edirik, yoxdursa yeni yaradırıq
+    idea = get_object_or_404(Idea, pk=pk) if pk else None
+    
     if request.method == 'POST':
         form = IdeaForm(request.POST, request.FILES, instance=idea)
         if form.is_valid():
-            # Formanı hələ bazaya yazmırıq (commit=False)
             new_idea = form.save(commit=False)
-            
-            # HTML-dən gələn kateqoriya adını tuturuq
-            category_name = request.POST.get('category')
-            
-            if category_name:
-                # Bazada bu adda kateqoriya axtarırıq, yoxdursa yaradırıq
-                category_obj, created = Category.objects.get_or_create(name=category_name)
-                new_idea.category = category_obj
-            else:
-                new_idea.category = None # Sahə boşdursa
-            
-            new_idea.author = request.user  # Müəllifi təyin edirik
+            if not pk: # Yalnız yeni yaradılan zaman müəllifi mənimsət
+                new_idea.author = request.user
             new_idea.save()
-            return redirect('home')
+            return redirect('home') # Uğurlu olduqda ana səhifəyə
     else:
         form = IdeaForm(instance=idea)
     
     return render(request, 'innovation/create_idea.html', {'form': form})
+
 
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
